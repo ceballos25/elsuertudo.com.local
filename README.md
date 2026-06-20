@@ -1,6 +1,9 @@
-# Dinámicas APFenix — Sistema de Rifas
+# El Suertudo — Sistema de Rifas (2 cifras)
 
-Plataforma web para gestionar rifas numéricas: venta de boletos, reservas, participación gratuita y panel administrativo para vendedores y administradores.
+Plataforma web de **El Suertudo** para gestionar dinámicas numéricas de 2 cifras: venta de boletos, reservas, participación gratuita y panel administrativo para vendedores y administradores.
+
+**Landing pública del cliente:** [landing.elsuertudo.com.co](https://landing.elsuertudo.com.co/)  
+**CDN de assets:** `https://cdn-el.elsuertudo.com.co`
 
 ## Características principales
 
@@ -9,6 +12,7 @@ Plataforma web para gestionar rifas numéricas: venta de boletos, reservas, part
 - **Rifas gratis** — 1 número por persona, venta directa sin confirmación manual
 - **Panel admin** — Vender, reservas, clientes, ventas, reportes, configuración del sitio
 - **Roles** — `administrador` (acceso total) y `vendedor` (operación diaria)
+- **Marca El Suertudo** — Colores verde/naranja, logos desde CDN, comprobante de venta con logo
 
 ## Stack tecnológico
 
@@ -20,24 +24,39 @@ Plataforma web para gestionar rifas numéricas: venta de boletos, reservas, part
 | Frontend admin | Bootstrap, jQuery, ApexCharts, Select2 |
 | API | Un solo endpoint AJAX POST |
 
-## Inicio rápido
+## Inicio rápido (local)
 
 ```bash
 # 1. Clonar / copiar el proyecto
 # 2. Instalar autoload
 composer install
 
-# 3. Crear .env-dinamicas (un nivel arriba del proyecto)
+# 3. Crear .env-el (un nivel arriba del proyecto)
+# Ejemplo: /home/usuario/websites/.env-el
 # Ver: docs/configuracion.md
 
-# 4. Importar esquema base + migraciones
-mysql -u usuario -p nombre_bd < bd.sql
-mysql -u usuario -p nombre_bd < database/migrations/001_add_is_free_raffle.sql
+# 4. Crear base de datos e importar esquema
+mysql -u usuario -p -e "CREATE DATABASE elsuertudo CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+# Importar estructura desde un dump del proyecto o BD de referencia
 
 # 5. Acceder
-# Público:  {SITE_URL}/?env=1
+# Público:  {SITE_URL}/?env=ID_RIFA
 # Admin:    {SITE_URL}/dash.php
 ```
+
+### Variables clave en `.env-el`
+
+```env
+SITE_NAME=El Suertudo
+SITE_URL=https://elsuertudo.com.local
+CDN_LOGOS_URL=https://cdn-el.elsuertudo.com.co/logos
+CONTACT_PHONE=+57 320 5817000
+WHATSAPP_URL=https://chat.whatsapp.com/BbAI6b7i6xDFKBijJZIjW7
+SALE_PREFIX=EL-
+SESSION_NAME=EL_SUERTUDO
+```
+
+El bootstrap carga el archivo desde `config/config.php` → `../../.env-el`.
 
 ## Documentación
 
@@ -54,9 +73,9 @@ mysql -u usuario -p nombre_bd < database/migrations/001_add_is_free_raffle.sql
 ## Estructura del proyecto
 
 ```
-├── index.php              # Landing pública
+├── index.php              # Landing pública (grilla de números)
 ├── dash.php               # Login admin
-├── config/                # Bootstrap y carga de .env
+├── config/                # Bootstrap y carga de .env-el
 ├── app/
 │   ├── Controllers/       # Entrada HTTP/AJAX
 │   ├── Services/          # Lógica de negocio
@@ -65,10 +84,11 @@ mysql -u usuario -p nombre_bd < database/migrations/001_add_is_free_raffle.sql
 │   └── Support/           # Reglas compartidas
 ├── front/                 # Vistas del panel admin
 │   └── ajax/api.php       # Punto de entrada API
-├── assets/                # CSS, JS, librerías
-├── includes/              # Layout compartido admin
-├── database/migrations/   # Migraciones SQL
-└── uploads/settings/      # Logo y favicon (runtime)
+├── assets/
+│   ├── css/theme-base.css # Paleta El Suertudo
+│   └── images/logos/      # Logos sincronizados desde CDN
+├── includes/              # Layout compartido admin + template comprobante
+└── uploads/settings/      # Logo/favicon subidos desde el panel (runtime)
 ```
 
 ## Enlaces útiles
@@ -76,6 +96,17 @@ mysql -u usuario -p nombre_bd < database/migrations/001_add_is_free_raffle.sql
 - Landing de una rifa: `{SITE_URL}/?env={id_raffle}`
 - API: `POST {SITE_URL}/front/ajax/api.php`
 - Parámetros: `module`, `action` + datos del formulario
+- Mi Negocio (admin): logo, WhatsApp, redes, activar/desactivar sitio
+
+## Producción
+
+Antes de lanzar, revisar [docs/despliegue.md](docs/despliegue.md):
+
+- `.env-el` en el servidor con `SITE_URL` HTTPS real
+- `SESSION_COOKIE_SECURE=true`
+- `DEBUG_MODE=false` y `DISPLAY_ERRORS=false`
+- Credenciales de BD del hosting (no las de local)
+- Rifa real creada y probada end-to-end
 
 ## Licencia y autor
 
