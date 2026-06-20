@@ -99,49 +99,20 @@ class ReceiptService
 
     private function safeLogoUrl(): string
     {
-        foreach ($this->logoLocalCandidates() as $path => $publicUrl) {
-            if (is_readable($path)) {
-                return $this->esc($publicUrl);
-            }
-        }
-
         $logo = SiteConfig::logo();
-        $fallback = ASSETS_URL . '/images/logos/logo.jpg';
-
-        if (preg_match('#^https?://#i', $logo)) {
-            if (!filter_var($logo, FILTER_VALIDATE_URL)) {
-                return $this->esc($fallback);
-            }
-
-            $inlined = $this->inlineLogoFromRemote($logo);
-            return $inlined ?? $this->esc($fallback);
+        if ($logo === '') {
+            $logo = rtrim((string) env('CDN_LOGOS_URL', 'https://cdn-el.elsuertudo.com.co/logos'), '/')
+                . '/' . ltrim((string) env('BRAND_LOGO', 'logo.jpg'), '/');
         }
 
-        if (str_contains($logo, "\0") || preg_match('/[<>"\']/', $logo)) {
-            return $this->esc($fallback);
+        if (preg_match('#^https?://#i', $logo) && filter_var($logo, FILTER_VALIDATE_URL)) {
+            $inlined = $this->inlineLogoFromRemote($logo);
+            if ($inlined !== null) {
+                return $inlined;
+            }
         }
 
         return $this->esc($logo);
-    }
-
-    /**
-     * @return array<string, string> path => public URL
-     */
-    private function logoLocalCandidates(): array
-    {
-        $candidates = [
-            ROOT_PATH . '/assets/images/logos/logo-dinamicas.jpg' => ASSETS_URL . '/images/logos/logo-dinamicas.jpg',
-            ROOT_PATH . '/assets/images/logos/logo.jpg' => ASSETS_URL . '/images/logos/logo.jpg',
-            ROOT_PATH . '/assets/images/logos/logo.png' => ASSETS_URL . '/images/logos/logo.png',
-        ];
-
-        $setting = SiteConfig::get('site_logo');
-        if ($setting && !str_starts_with($setting, 'http')) {
-            $path = ROOT_PATH . '/' . ltrim($setting, '/');
-            $candidates[$path] = BASE_URL . '/' . ltrim($setting, '/');
-        }
-
-        return $candidates;
     }
 
     private function inlineLogoFromRemote(string $url): ?string

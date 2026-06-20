@@ -29,20 +29,20 @@ class SiteConfig
 
     public static function logo(): string
     {
-        $logo = self::get('site_logo');
-        if ($logo && !str_starts_with($logo, 'http')) {
-            return BASE_URL . '/' . ltrim($logo, '/');
-        }
-        return $logo ?: ASSETS_URL . '/images/logos/logo.jpg';
+        return self::resolveBrandAsset(
+            self::get('site_logo'),
+            env('BRAND_LOGO', 'logo.jpg'),
+            env('CDN_LOGOS_URL', 'https://cdn-el.elsuertudo.com.co/logos')
+        );
     }
 
     public static function favicon(): string
     {
-        $icon = self::get('site_favicon');
-        if ($icon && !str_starts_with($icon, 'http')) {
-            return BASE_URL . '/' . ltrim($icon, '/');
-        }
-        return $icon ?: ASSETS_URL . '/images/logos/logo.ico';
+        return self::resolveBrandAsset(
+            self::get('site_favicon'),
+            env('BRAND_FAVICON', 'logo.ico'),
+            env('CDN_LOGOS_URL', 'https://cdn-el.elsuertudo.com.co/logos')
+        );
     }
 
     public static function isActive(): bool
@@ -73,5 +73,29 @@ class SiteConfig
     public static function clearCache(): void
     {
         self::$cache = null;
+    }
+
+    /**
+     * Resuelve logo/favicon: URL absoluta, upload local o filename en CDN.
+     */
+    private static function resolveBrandAsset(?string $setting, string $envDefault, ?string $cdnBase): string
+    {
+        $value = trim((string) ($setting ?: $envDefault));
+        if ($value === '') {
+            return '';
+        }
+
+        if (str_starts_with($value, 'http://') || str_starts_with($value, 'https://')) {
+            return $value;
+        }
+
+        if (str_starts_with($value, 'uploads/')) {
+            return BASE_URL . '/' . ltrim($value, '/');
+        }
+
+        $filename = basename($value);
+        $cdnBase = rtrim((string) $cdnBase, '/');
+
+        return $cdnBase !== '' ? "{$cdnBase}/{$filename}" : '';
     }
 }
