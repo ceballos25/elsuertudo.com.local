@@ -1,0 +1,76 @@
+/**
+ * =============================================
+ * TEMA RIFA — El Suertudo
+ * =============================================
+ * PRIMARY_COLOR   = #014005
+ * PRIMARY_LIGHT   = #04D912
+ * SECONDARY_COLOR = #F29F05
+ * ACCENT_COLOR    = #AAF20F
+ * GOLD_LIGHT      = #F2E205
+ * GOLD_DARK       = #F29F05
+ * DARK_COLOR      = #014005
+ */
+
+:root {
+    /* --- Marca: verde --- */
+    --raffle-color-primary: #014005;
+    --raffle-color-primary-dark: #012803;
+    --raffle-color-primary-light: #04D912;
+    --raffle-color-primary-rgb: 1, 64, 5;
+    --raffle-color-primary-soft: #F0FDF1;
+    --raffle-color-primary-muted: rgba(1, 64, 5, 0.12);
+
+    /* --- Secundario / acentos cálidos --- */
+    --raffle-color-secondary: #F29F05;
+    --raffle-color-secondary-rgb: 242, 159, 5;
+    --raffle-color-accent: #AAF20F;
+    --raffle-color-accent-light: #AAF20F;
+    --raffle-color-accent-rgb: 170, 242, 15;
+    --raffle-color-accent-muted: rgba(242, 159, 5, 0.16);
+
+    /* --- Dorado --- */
+    --raffle-color-gold-light: #F2E205;
+    --raffle-color-gold-dark: #F29F05;
+    --raffle-color-gold-rgb: 242, 226, 5;
+
+    /* --- Superficies y texto --- */
+    --raffle-color-dark: #014005;
+    --raffle-color-text: #1A2E1A;
+    --raffle-color-muted: #5C6B5C;
+    --raffle-color-surface-alt: #F5FFF6;
+    --raffle-color-border: #C6E8C8;
+
+    /* --- Gradientes de marca --- */
+    --raffle-gradient-primary: linear-gradient(135deg, #014005 0%, #04D912 100%);
+    --raffle-gradient-accent: linear-gradient(135deg, #F29F05 0%, #F2E205 50%, #AAF20F 100%);
+    --raffle-gradient-hero: linear-gradient(160deg, #FFFFFF 0%, #F5FFF6 55%, #ECFCE9 100%);
+    --raffle-gradient-footer: linear-gradient(180deg, #F5FFF6 0%, #ECFCE9 100%);
+
+    /* --- Números disponibles --- */
+    --raffle-color-available-bg: #ffffff;
+    --raffle-color-available-border: #C6E8C8;
+
+    /* --- Números seleccionados --- */
+    --raffle-color-selected-bg: var(--raffle-color-primary);
+    --raffle-color-selected-text: #ffffff;
+    --raffle-color-selected-border: var(--raffle-color-primary-dark);
+
+    /* --- Números vendidos --- */
+    --raffle-color-sold-bg: #F5FFF6;
+    --raffle-color-sold-text: #5C6B5C;
+    --raffle-color-sold-border: #DCE8DC;
+
+    /* --- Forma de los cuadros de número --- */
+    --raffle-number-radius: 12px;
+
+    /* --- Ticket / comprobante --- */
+    --raffle-color-ticket-accent: var(--raffle-color-secondary);
+    --raffle-color-ticket-text: var(--raffle-color-primary);
+    --raffle-color-ticket-chip-bg: var(--raffle-color-primary);
+    --raffle-color-ticket-chip-text: #ffffff;
+    --raffle-color-ticket-share-bg: #F0FDF1;
+    --raffle-color-ticket-share-border: #C6E8C8;
+    --raffle-color-ticket-code-bg: #F5FFF6;
+    --raffle-color-ticket-code-border: #B8E6BA;
+    --raffle-color-ticket-numbers-bg: #F8FFF8;
+}

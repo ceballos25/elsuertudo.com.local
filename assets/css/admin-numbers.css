@@ -1,0 +1,202 @@
+/**
+ * Números en panel admin — mismo aspecto que index (.number-box), tamaño reducido
+ */
+
+/* Grilla de venta (vender.php) — igual al index, celdas más compactas */
+.number-box {
+    position: relative;
+    box-sizing: border-box;
+    border: 2px solid var(--raffle-color-available-border);
+    border-radius: var(--raffle-number-radius);
+    padding: 0;
+    text-align: center;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, color 0.2s ease;
+    user-select: none;
+    background: var(--raffle-color-available-bg);
+    width: 55px;
+    height: 55px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.number-box:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(var(--raffle-color-primary-rgb), 0.15);
+}
+
+.number-box.selected {
+    background: var(--raffle-color-selected-bg);
+    color: var(--raffle-color-selected-text);
+    border-color: var(--raffle-color-selected-border);
+    box-shadow: 0 4px 12px rgba(var(--raffle-color-primary-rgb), 0.35);
+}
+
+.number-box.mini {
+    width: 38px;
+    height: 38px;
+    font-size: 12px;
+    padding: 0;
+    cursor: not-allowed;
+}
+
+.number-box.sold,
+.number-box.reserved {
+    background: var(--raffle-color-sold-bg);
+    border-color: var(--raffle-color-sold-border);
+    color: var(--raffle-color-sold-text);
+    cursor: not-allowed;
+}
+
+.number-box.sold:hover,
+.number-box.reserved:hover {
+    transform: none;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+}
+
+/* Mini cuadro — réplica del index para listas y tablas admin */
+.admin-num-chip,
+.ticket-num-chip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    min-width: 38px;
+    height: 38px;
+    padding: 0 5px;
+    border: 2px solid var(--raffle-color-available-border);
+    border-radius: var(--raffle-number-radius);
+    background: var(--raffle-color-available-bg);
+    color: var(--raffle-color-primary);
+    font-weight: 700;
+    font-size: 0.8125rem;
+    line-height: 1;
+    letter-spacing: 0.02em;
+    vertical-align: middle;
+}
+
+.admin-num-chip--selected,
+.ticket-num-chip--selected {
+    background: var(--raffle-color-selected-bg);
+    color: var(--raffle-color-selected-text);
+    border-color: var(--raffle-color-selected-border);
+    box-shadow: 0 2px 6px rgba(var(--raffle-color-primary-rgb), 0.2);
+}
+
+.admin-num-chip--sold,
+.ticket-num-chip--sold {
+    background: var(--raffle-color-selected-bg);
+    color: var(--raffle-color-selected-text);
+    border-color: var(--raffle-color-selected-border);
+    box-shadow: 0 2px 6px rgba(var(--raffle-color-primary-rgb), 0.2);
+}
+
+.admin-num-chip--mark {
+    background: rgba(var(--bs-warning-rgb), 0.15);
+    color: var(--bs-warning-text-emphasis, #664d03);
+    border-color: var(--bs-warning);
+}
+
+/* Modal liberar números (ventas.php) */
+.ticket-release-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.ticket-release-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    width: 58px;
+    min-height: 54px;
+    padding: 6px 4px 5px;
+    margin: 0;
+    border: 2px solid var(--raffle-color-available-border);
+    border-radius: var(--raffle-number-radius);
+    background: var(--raffle-color-available-bg);
+    cursor: pointer;
+    transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.ticket-release-item:active {
+    transform: scale(0.96);
+}
+
+.ticket-release-item:has(.ticket-liberar:checked) {
+    border-color: var(--bs-warning);
+    background: rgba(var(--bs-warning-rgb), 0.12);
+    box-shadow: 0 0 0 2px rgba(var(--bs-warning-rgb), 0.3);
+}
+
+.ticket-release-check {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    line-height: 0;
+}
+
+.ticket-release-check .ticket-liberar {
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    cursor: pointer;
+    border: 2px solid var(--raffle-color-primary);
+    border-radius: 4px;
+    flex-shrink: 0;
+}
+
+.ticket-release-check .ticket-liberar:checked {
+    background-color: var(--bs-warning);
+    border-color: var(--bs-warning);
+}
+
+.ticket-release-check .ticket-liberar:focus {
+    box-shadow: 0 0 0 2px rgba(var(--bs-warning-rgb), 0.35);
+    border-color: var(--bs-warning);
+}
+
+.ticket-release-num {
+    font-weight: 700;
+    font-size: 0.875rem;
+    letter-spacing: 0.02px;
+    color: var(--raffle-color-primary);
+    line-height: 1;
+}
+
+.ticket-release-item:has(.ticket-liberar:checked) .ticket-release-num {
+    color: var(--bs-warning-text-emphasis, #664d03);
+}
+
+@media (max-width: 576px) {
+    .ticket-release-item {
+        width: 54px;
+        min-height: 50px;
+    }
+
+    .ticket-release-check .ticket-liberar {
+        width: 20px;
+        height: 20px;
+    }
+
+    .ticket-release-num {
+        font-size: 0.9rem;
+    }
+}
+
+/* Vista previa compartir números disponibles */
+.admin-num-preview-cell {
+    border: 2px solid var(--raffle-color-available-border);
+    border-radius: var(--raffle-number-radius);
+    background: var(--raffle-color-available-bg);
+    color: var(--raffle-color-primary);
+    font-weight: 700;
+}

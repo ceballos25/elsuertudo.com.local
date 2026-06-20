@@ -1,0 +1,268 @@
+/* ==========================================================================
+   Dashboard — layout
+   ========================================================================== */
+
+.dash-page {
+    padding-top: 20px;
+}
+
+.dash-filter-resumen {
+    font-size: 0.78rem;
+    color: #64748b;
+}
+
+.dash-filter-rifa {
+    min-width: 200px;
+}
+
+.dash-filter-periodo {
+    min-width: 130px;
+}
+
+#dashContent.dash-loading {
+    opacity: 0.55;
+    pointer-events: none;
+    transition: opacity 0.2s;
+}
+
+/* ==========================================================================
+   Dashboard — KPI cards (base)
+   ========================================================================== */
+
+.dash-kpi-card {
+    border: 0;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(15, 23, 42, 0.06);
+    height: 100%;
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.dash-kpi-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.1);
+}
+
+.dash-kpi-card .card-body {
+    padding: 1.1rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+}
+
+.dash-kpi-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+}
+
+.dash-kpi-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.dash-kpi-label {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #6c757d;
+    line-height: 1.2;
+}
+
+.dash-kpi-value {
+    font-size: clamp(1.25rem, 1.8vw, 1.65rem);
+    font-weight: 800;
+    color: #111827;
+    line-height: 1.1;
+}
+
+.dash-kpi-meta {
+    font-size: 0.72rem;
+    color: #94a3b8;
+}
+
+.dash-kpi-bar {
+    height: 4px;
+    border-radius: 999px;
+    background: #eef2f7;
+    overflow: hidden;
+}
+
+.dash-kpi-bar-fill {
+    width: 0;
+    height: 100%;
+    border-radius: 999px;
+    transition: width 0.5s ease;
+}
+
+/* ==========================================================================
+   Dashboard — KPI cards (variants)
+   ========================================================================== */
+
+.dash-kpi-card--ventas {
+    border-top: 3px solid #0d9488;
+}
+
+.dash-kpi-card--ventas:hover {
+    box-shadow: 0 8px 28px rgba(13, 148, 136, 0.15);
+}
+
+.dash-kpi-card--ventas .dash-kpi-icon {
+    background: linear-gradient(135deg, #0d9488 0%, #14b8a6 100%);
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(13, 148, 136, 0.28);
+}
+
+.dash-kpi-card--ventas .dash-kpi-value {
+    color: #0f766e;
+    letter-spacing: -0.02em;
+}
+
+.dash-kpi-card--ventas .dash-kpi-meta {
+    color: #0d9488;
+    opacity: 0.85;
+}
+
+.dash-kpi-card--vendidos {
+    border-top: 3px solid #10b981;
+}
+
+.dash-kpi-card--vendidos .dash-kpi-icon {
+    background: rgba(16, 185, 129, 0.12);
+    color: #10b981;
+}
+
+.dash-kpi-card--vendidos .dash-kpi-bar-fill {
+    background: #10b981;
+}
+
+.dash-kpi-card--reservados {
+    border-top: 3px solid #f59e0b;
+}
+
+.dash-kpi-card--reservados .dash-kpi-icon {
+    background: rgba(245, 158, 11, 0.12);
+    color: #f59e0b;
+}
+
+.dash-kpi-card--reservados .dash-kpi-bar-fill {
+    background: #f59e0b;
+}
+
+.dash-kpi-card--disponibles {
+    border-top: 3px solid #0ea5e9;
+}
+
+.dash-kpi-card--disponibles .dash-kpi-icon {
+    background: rgba(14, 165, 233, 0.12);
+    color: #0ea5e9;
+}
+
+.dash-kpi-card--disponibles .dash-kpi-bar-fill {
+    background: #0ea5e9;
+}
+
+.dash-kpi-card--clientes {
+    border-top: 3px solid #64748b;
+}
+
+.dash-kpi-card--clientes .dash-kpi-icon {
+    background: rgba(100, 116, 139, 0.12);
+    color: #64748b;
+}
+
+/* ==========================================================================
+   Dashboard — distribución de números
+   ========================================================================== */
+
+.dash-distribucion .dash-stack-bar {
+    display: flex;
+    height: 10px;
+    border-radius: 999px;
+    overflow: hidden;
+    background: #eef2f7;
+}
+
+.dash-distribucion .dash-stack-seg {
+    width: 0;
+    height: 100%;
+    transition: width 0.5s ease;
+}
+
+.dash-distribucion .dash-stack-seg--vendidos {
+    background: #10b981;
+}
+
+.dash-distribucion .dash-stack-seg--reservados {
+    background: #f59e0b;
+}
+
+.dash-distribucion .dash-stack-seg--disponibles {
+    background: #0ea5e9;
+}
+
+.dash-legend-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 4px;
+}
+
+.dash-legend-dot--vendidos {
+    background: #10b981;
+}
+
+.dash-legend-dot--reservados {
+    background: #f59e0b;
+}
+
+.dash-legend-dot--disponibles {
+    background: #0ea5e9;
+}
+
+/* ==========================================================================
+   Dashboard — secciones y gráficos
+   ========================================================================== */
+
+.dash-section-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #1e293b;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.dash-section-title i {
+    color: #4361ee;
+}
+
+.dash-chart-tendencia {
+    height: 350px;
+}
+
+.dash-chart-md {
+    height: 300px;
+}
+
+.dash-chart-wrap {
+    width: 100%;
+}
+
+/* ==========================================================================
+   Dashboard — responsive
+   ========================================================================== */
+
+@media (max-width: 1399px) {
+    .dash-kpi-value {
+        font-size: 1.35rem;
+    }
+}

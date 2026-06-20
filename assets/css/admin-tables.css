@@ -1,0 +1,787 @@
+/**
+ * Tablas del panel admin — anchos controlados y texto largo con ellipsis
+ */
+.table-admin {
+  table-layout: fixed;
+  width: 100%;
+}
+
+.table-admin th,
+.table-admin td {
+  vertical-align: middle;
+}
+
+.table-admin .cell-truncate,
+.table-admin .cell-truncate-link {
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.table-admin .cell-truncate-link {
+  text-decoration: none;
+}
+
+.table-admin .cell-truncate-link:hover {
+  text-decoration: underline;
+}
+
+/* Anchos por tipo de columna */
+.table-admin .col-id { width: 56px; }
+.table-admin .col-xs { width: 72px; }
+.table-admin .col-sm { width: 100px; }
+.table-admin .col-md { width: 130px; }
+.table-admin .col-rifa {
+  width: 18%;
+  min-width: 150px;
+  max-width: 240px;
+  white-space: normal;
+  word-break: break-word;
+  line-height: 1.45;
+  vertical-align: top;
+}
+
+.table-admin .col-codigo-rifa {
+  width: 16%;
+  min-width: 140px;
+  max-width: 220px;
+  white-space: normal;
+  word-break: break-word;
+  line-height: 1.45;
+  vertical-align: top;
+}
+
+.table-admin .cell-rifa-name {
+  display: block;
+  white-space: normal;
+  word-break: break-word;
+  line-height: 1.45;
+  font-size: 0.875rem;
+  color: #495057;
+}
+.table-admin .col-titulo { width: 180px; min-width: 140px; }
+.table-admin .col-text { width: 140px; min-width: 100px; }
+.table-admin .col-enlace { width: 160px; min-width: 120px; }
+.table-admin .col-cliente { width: 220px; min-width: 180px; }
+.table-admin .col-codigo { width: 120px; }
+.table-admin .col-token { width: 130px; }
+.table-admin .col-numeros { width: 140px; }
+.table-admin .col-estado { width: 110px; }
+.table-admin .col-fecha { width: 120px; }
+.table-admin .col-acciones { width: 120px; }
+.table-admin .col-cantidad { width: 70px; }
+.table-admin .col-total { width: 100px; }
+.table-admin .col-metodo { width: 120px; }
+
+/* Filas destacadas — venta verde, reserva pendiente amarilla (warning) */
+.table-mobile-cards tbody tr.card-row-venta,
+.table-admin tbody tr.card-row-venta td:first-child {
+  box-shadow: inset 4px 0 0 var(--raffle-color-primary);
+}
+
+.table-mobile-cards tbody tr.card-row-reserva,
+.table-admin tbody tr.card-row-reserva td:first-child {
+  box-shadow: inset 4px 0 0 #ffc107;
+}
+
+@media (max-width: 991.98px) {
+  .table-mobile-cards tbody tr.card-row-venta {
+    border-left: 4px solid var(--raffle-color-primary);
+  }
+
+  .table-mobile-cards tbody tr.card-row-reserva {
+    border-left: 4px solid #ffc107;
+  }
+}
+
+@media (max-width: 992px) {
+  .table-admin .col-rifa,
+  .table-admin .col-codigo-rifa {
+    min-width: 120px;
+    max-width: 180px;
+  }
+
+  .table-admin .col-titulo,
+  .table-admin .col-text,
+  .table-admin .col-enlace {
+    width: 120px;
+    min-width: 100px;
+  }
+}
+
+/* ============================================================
+   Rifas — tarjetas en todas las pantallas
+   ============================================================ */
+
+.rifas-cards-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+
+.rifas-cards-grid__empty {
+  grid-column: 1 / -1;
+}
+
+.rifa-card {
+  background: #fff;
+  border: 1px solid #e9ecef;
+  border-radius: 14px;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+.rifa-card__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px 16px 12px;
+  background: linear-gradient(180deg, #f8fafc 0%, #fff 100%);
+  border-bottom: 1px solid #eef1f4;
+}
+
+.rifa-card__head-main {
+  min-width: 0;
+  flex: 1;
+}
+
+.rifa-card__id {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #94a3b8;
+  margin-bottom: 0.25rem;
+}
+
+.rifa-card__title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.4;
+  color: #0f172a;
+  word-break: break-word;
+}
+
+.rifa-card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  padding: 12px 16px 0;
+  font-size: 0.8125rem;
+  color: #475569;
+}
+
+.rifa-card__meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+}
+
+.rifa-card__block {
+  padding: 12px 16px 0;
+}
+
+.rifa-card__label {
+  display: block;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #94a3b8;
+  margin-bottom: 0.35rem;
+}
+
+.rifa-card__text {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: #475569;
+  word-break: break-word;
+}
+
+.rifa-premios-list {
+  margin: 0;
+  padding-left: 1.1rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: #475569;
+}
+
+.rifa-premios-list li {
+  margin-bottom: 0.25rem;
+  word-break: break-word;
+}
+
+.rifa-premios-list li:last-child {
+  margin-bottom: 0;
+}
+
+.rifa-card__link {
+  display: flex;
+  gap: 8px;
+  padding: 14px 16px 0;
+  margin-top: auto;
+}
+
+.rifa-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 12px 16px 16px;
+  border-top: 1px solid #f1f3f5;
+  margin-top: 12px;
+}
+
+.rifa-card__actions .btn {
+  flex: 1 1 auto;
+  min-width: fit-content;
+}
+
+@media (min-width: 768px) {
+  .rifas-cards-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+}
+
+@media (min-width: 1400px) {
+  .rifas-cards-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* ============================================================
+   Mobile + tablet: tablas admin genéricas → tarjetas (< 992px / lg)
+   ============================================================ */
+
+.admin-table-wrap .admin-table-scroll {
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+.admin-mobile-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.admin-mobile-card {
+  background: #fff;
+  border: 1px solid #e9ecef;
+  border-radius: 14px;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
+  overflow: hidden;
+}
+
+.admin-mobile-card__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 14px 14px 10px;
+  background: linear-gradient(180deg, #f8f9fa 0%, #fff 100%);
+  border-bottom: 1px solid #eef1f4;
+}
+
+.admin-mobile-card__title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.35;
+  color: #212529;
+  word-break: break-word;
+}
+
+.admin-mobile-card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  padding: 10px 14px 0;
+  font-size: 0.8125rem;
+  color: #495057;
+}
+
+.admin-mobile-card__meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+}
+
+.admin-mobile-card__text {
+  margin: 10px 14px 0;
+  font-size: 0.875rem;
+  line-height: 1.45;
+  color: #495057;
+  word-break: break-word;
+}
+
+.admin-mobile-card__text strong {
+  color: #343a40;
+}
+
+.admin-mobile-card__link {
+  display: flex;
+  gap: 8px;
+  padding: 12px 14px 0;
+}
+
+.admin-mobile-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 12px 14px 14px;
+  border-top: 1px solid #f1f3f5;
+  margin-top: 12px;
+}
+
+.admin-mobile-card__actions .btn {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* Chips reutilizables (desktop + tarjetas) — base en admin-numbers.css */
+.ticket-num-chip {
+  min-width: 42px;
+  height: 42px;
+}
+
+.token-chip {
+  display: inline-block;
+  font-family: var(--bs-font-monospace);
+  font-size: 0.8125rem;
+  padding: 0.35rem 0.6rem;
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  color: #495057;
+  word-break: break-all;
+}
+
+.token-chip-block {
+  display: block;
+  width: 100%;
+  font-size: 0.78rem;
+  line-height: 1.35;
+  white-space: normal;
+  word-break: break-all;
+}
+
+/* Cabecera móvil compartida (ventas + reservas) */
+.admin-card-head {
+  width: 100%;
+}
+
+.admin-card-head__client {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  width: 100%;
+}
+
+.admin-card-avatar {
+  width: 42px;
+  height: 42px;
+  min-width: 42px;
+  border-radius: 50%;
+  background: #e7f1ff;
+  border: 1px solid #b6d4fe;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: #0d6efd;
+}
+
+.admin-card-client-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  line-height: 1.35;
+  gap: 2px;
+}
+
+.admin-card-name,
+.admin-client-name {
+  font-weight: 700;
+  color: #0d6efd;
+  text-transform: capitalize;
+  word-break: break-word;
+}
+
+.admin-card-phone {
+  font-size: 0.8125rem;
+  color: #6c757d;
+}
+
+.admin-phone-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  line-height: 1.35;
+}
+
+.admin-phone-link:hover {
+  color: #128C7E;
+}
+
+.admin-icon-whatsapp {
+  color: #25D366;
+  font-size: 0.95rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.admin-phone-link:hover .admin-icon-whatsapp {
+  color: #128C7E;
+}
+
+.admin-seller-line .ti-user {
+  font-size: 0.875rem;
+  opacity: 0.85;
+  margin-right: 0.15rem;
+}
+
+.admin-desktop-client .admin-card-extra {
+  margin-top: 1px;
+}
+
+.admin-card-extra {
+  font-size: 0.75rem;
+  color: #868e96;
+  margin-top: 2px;
+}
+
+.admin-card-head__status-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+.admin-card-head__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.card-meta-chip {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  padding: 0.35rem 0.7rem;
+  border-radius: 999px;
+  border: 1px solid;
+  line-height: 1.2;
+}
+
+.card-meta-chip--qty {
+  background: #e7f1ff;
+  color: #084298;
+  border-color: #9ec5fe;
+}
+
+.card-meta-chip--total {
+  background: #f8f9fa;
+  color: #212529;
+  border-color: #ced4da;
+  font-weight: 700;
+}
+
+.admin-card-head__rifa {
+  margin-top: 8px;
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  color: #6c757d;
+}
+
+.admin-card-head__rifa .cell-rifa-name {
+  color: #6c757d;
+}
+
+.admin-card-head__code {
+  margin-top: 10px;
+}
+
+.admin-card-head__numeros {
+  margin-top: 10px;
+}
+
+.admin-card-head__numeros .card-chip-list {
+  justify-content: flex-start;
+}
+
+.card-chip-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+@media (max-width: 991.98px) {
+  .admin-table-wrap .admin-table-scroll,
+  .admin-table-wrap.table-responsive {
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  .table-mobile-cards {
+    table-layout: auto;
+  }
+
+  .table-mobile-cards thead {
+    display: none;
+  }
+
+  .table-mobile-cards tbody {
+    display: block;
+  }
+
+  .table-mobile-cards tbody tr {
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border: 1px solid #e9ecef;
+    border-radius: 14px;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
+    overflow: hidden;
+  }
+
+  .table-mobile-cards.table-hover tbody tr:hover {
+    background: #fff;
+  }
+
+  .table-mobile-cards.table-striped > tbody > tr:nth-of-type(odd) {
+    --bs-table-accent-bg: #fff;
+    background-color: #fff;
+  }
+
+  .table-mobile-cards tbody tr.align-middle {
+    vertical-align: top;
+  }
+
+  .table-mobile-cards td {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    padding: 11px 14px !important;
+    border: none;
+    border-bottom: 1px solid #f1f3f5;
+    white-space: normal;
+    word-break: break-word;
+    text-align: right;
+    vertical-align: top;
+  }
+
+  .table-mobile-cards td:last-child {
+    border-bottom: none;
+  }
+
+  .table-mobile-cards td::before {
+    content: attr(data-label);
+    flex: 0 0 auto;
+    max-width: 38%;
+    font-weight: 600;
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #868e96;
+    text-align: left;
+    line-height: 1.4;
+  }
+
+  .table-mobile-cards td[data-label=""]::before,
+  .table-mobile-cards td:not([data-label])::before {
+    display: none;
+  }
+
+  /* Ocultar filas duplicadas solo visibles en tabla desktop */
+  .table-mobile-cards td.card-field-desktop-only,
+  .table-mobile-cards td.mobile-field-desktop-only {
+    display: none !important;
+  }
+
+  /* Valores: ancho natural, sin estirar */
+  .table-mobile-cards td > .card-field-value,
+  .table-mobile-cards td > .d-flex.flex-column {
+    flex: 0 1 auto;
+    max-width: 62%;
+    margin-left: auto;
+    text-align: right;
+  }
+
+  .table-mobile-cards td.mobile-card-head .d-flex,
+  .table-mobile-cards td.mobile-card-head > .d-flex,
+  .table-mobile-cards td.mobile-card-head .admin-card-head__client {
+    width: 100%;
+    max-width: 100%;
+    margin-left: 0;
+    text-align: left;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    align-items: center;
+  }
+
+  .table-mobile-cards td.mobile-card-head .admin-card-avatar {
+    flex-shrink: 0;
+  }
+
+  .table-mobile-cards td.mobile-card-head .admin-card-client-info {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  /* Chips: tamaño fijo, nunca full-width */
+  .table-mobile-cards .badge,
+  .table-mobile-cards .ticket-num-chip,
+  .table-mobile-cards .token-chip {
+    flex: 0 0 auto !important;
+    width: auto !important;
+    max-width: none !important;
+    align-self: flex-end;
+  }
+
+  .table-mobile-cards .ticket-num-chip {
+    width: 44px !important;
+    height: 44px !important;
+    min-width: 44px;
+    font-size: 0.9rem;
+  }
+
+  .table-mobile-cards .token-chip {
+    display: inline-block;
+    font-family: var(--bs-font-monospace);
+    font-size: 0.8125rem;
+    padding: 0.35rem 0.6rem;
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    color: #495057;
+    word-break: break-all;
+    text-align: right;
+  }
+
+  .table-mobile-cards .card-chip-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    justify-content: flex-end;
+    flex: 0 1 auto;
+    max-width: 62%;
+    margin-left: auto;
+  }
+
+  .table-mobile-cards .card-chip-list .badge {
+    margin: 0 !important;
+  }
+
+  .table-mobile-cards td.mobile-card-head .badge {
+    flex: 0 0 auto;
+  }
+
+  .table-mobile-cards td.mobile-card-head {
+    display: block;
+    order: -1;
+    padding: 14px !important;
+    background: linear-gradient(180deg, #f8f9fa 0%, #fff 100%);
+    border-bottom: 1px solid #eef1f4;
+  }
+
+  .table-mobile-cards td.mobile-card-actions {
+    display: block;
+    order: 99;
+    padding: 12px 14px 14px !important;
+    background: #fafbfc;
+    border-top: 1px solid #eef1f4;
+  }
+
+  .table-mobile-cards .card-action-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .table-mobile-cards .card-action-row {
+    display: flex;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .table-mobile-cards .card-action-stack .btn-success {
+    font-weight: 600;
+    padding-top: 0.55rem;
+    padding-bottom: 0.55rem;
+  }
+
+  .table-mobile-cards td.mobile-card-actions .btn-group {
+    display: flex !important;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .table-mobile-cards td.mobile-card-actions .btn-group .btn {
+    width: 100%;
+    border-radius: 8px !important;
+  }
+
+  .table-mobile-cards td.mobile-hide {
+    display: none !important;
+  }
+
+  .table-mobile-cards .cell-truncate {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: unset;
+  }
+
+  .table-mobile-cards .cell-rifa-name {
+    text-align: right;
+    flex: 0 1 auto;
+    max-width: 62%;
+    margin-left: auto;
+  }
+
+  .table-mobile-cards td.text-center,
+  .table-mobile-cards td.text-end {
+    text-align: right !important;
+  }
+
+  .table-mobile-cards td.ps-3,
+  .table-mobile-cards td.ps-4,
+  .table-mobile-cards td.ps-5,
+  .table-mobile-cards td.pe-3,
+  .table-mobile-cards td.pe-4,
+  .table-mobile-cards td.pe-5 {
+    padding-left: 14px !important;
+    padding-right: 14px !important;
+  }
+
+  .card-footer .pagination {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .card-footer .d-flex.justify-content-between {
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+  }
+}
