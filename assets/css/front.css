@@ -227,7 +227,12 @@
 
 .landing-legend-sold {
     background: var(--raffle-color-sold-bg);
-    border: 2px solid var(--raffle-color-sold-border);
+    border: 2px dashed var(--raffle-color-sold-border);
+}
+
+.landing-legend-reserved {
+    background: var(--raffle-color-sold-bg);
+    border: 2px dashed var(--raffle-color-sold-border);
 }
 
 .landing-checkout-icon {
@@ -527,21 +532,23 @@
     font-size: 14px;
     box-sizing: border-box;
     cursor: pointer;
-    transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, color 0.2s ease;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
     user-select: none;
     background: var(--raffle-color-available-bg);
+    box-shadow: 0 1px 3px rgba(1, 64, 5, 0.06);
 }
 
-.number-box:hover {
+.number-box:hover:not(.sold):not(.reserved) {
     transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(var(--raffle-color-primary-rgb), 0.1);
-    border-color: var(--raffle-color-secondary);
+    box-shadow: 0 6px 16px rgba(var(--raffle-color-primary-rgb), 0.14);
+    border-color: var(--raffle-color-primary);
 }
 
 .number-box.selected {
     background: var(--raffle-color-selected-bg);
     color: var(--raffle-color-selected-text);
     border-color: var(--raffle-color-selected-border);
+    border-style: solid;
     box-shadow: 0 4px 12px rgba(var(--raffle-color-primary-rgb), 0.28);
 }
 
@@ -550,14 +557,20 @@
     background: var(--raffle-color-sold-bg);
     color: var(--raffle-color-sold-text);
     border-color: var(--raffle-color-sold-border);
+    border-style: dashed;
     cursor: pointer;
     justify-content: center;
     gap: 1px;
+    box-shadow: none;
+    opacity: 0.95;
 }
 
 .number-box.sold:hover,
 .number-box.reserved:hover {
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+    transform: none;
+    box-shadow: none;
+    border-color: var(--raffle-color-sold-border);
+    background: #D0DAD0;
 }
 
 .checkout-card {
@@ -668,7 +681,11 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    color: var(--raffle-color-primary-dark);
+}
+
+.number-box.sold .number-box__owner,
+.number-box.reserved .number-box__owner {
+    color: var(--raffle-color-sold-text);
 }
 
 .number-box__detail {
@@ -682,6 +699,11 @@
     line-height: 1;
     margin-top: 0;
     pointer-events: none;
+}
+
+.number-box.sold .number-box__detail,
+.number-box.reserved .number-box__detail {
+    color: var(--raffle-color-sold-text);
 }
 
 .number-box.sold:hover .number-box__detail,

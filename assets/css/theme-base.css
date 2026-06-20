@@ -48,7 +48,7 @@
 
     /* --- Números disponibles --- */
     --raffle-color-available-bg: #ffffff;
-    --raffle-color-available-border: #C6E8C8;
+    --raffle-color-available-border: #04D912;
 
     /* --- Números seleccionados --- */
     --raffle-color-selected-bg: var(--raffle-color-primary);
@@ -56,9 +56,14 @@
     --raffle-color-selected-border: var(--raffle-color-primary-dark);
 
     /* --- Números vendidos --- */
-    --raffle-color-sold-bg: #F5FFF6;
-    --raffle-color-sold-text: #5C6B5C;
-    --raffle-color-sold-border: #DCE8DC;
+    --raffle-color-sold-bg: #DDE6DD;
+    --raffle-color-sold-text: #3A453A;
+    --raffle-color-sold-border: #7A917C;
+
+    /* --- Números reservados (mismo aspecto que vendidos) --- */
+    --raffle-color-reserved-bg: var(--raffle-color-sold-bg);
+    --raffle-color-reserved-text: var(--raffle-color-sold-text);
+    --raffle-color-reserved-border: var(--raffle-color-sold-border);
 
     /* --- Forma de los cuadros de número --- */
     --raffle-number-radius: 12px;

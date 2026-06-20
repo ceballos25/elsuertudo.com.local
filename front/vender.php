@@ -1,6 +1,7 @@
 <?php
 require_once "../config/config.php";
 $page_title = "Nueva Venta";
+$extra_css = '<link rel="stylesheet" href="' . ASSETS_URL . '/css/vender.css?v=1">';
 include_once ROOT_PATH . "/includes/head.php";
 ?>
 
@@ -155,7 +156,7 @@ include_once ROOT_PATH . "/includes/head.php";
                 <span class="h6 mb-0 text-muted">
                     Total a Pagar
                     <small class="ms-1 text-muted">
-                        (<span id="lblCantidadMobile">0</span> nums)
+                        (<span id="lblCantidadDesktop">0</span> nums)
                     </small>
                 </span>
                 <span class="h2 mb-0 fw-bolder text-primary" id="lblTotalDesktop">$0</span>
@@ -173,7 +174,7 @@ include_once ROOT_PATH . "/includes/head.php";
 
 </div> 
 
-<div class="d-lg-none" style="height: 120px;"></div>
+<div class="d-lg-none vender-mobile-spacer"></div>
 
 </div>
 </div>
@@ -181,39 +182,26 @@ include_once ROOT_PATH . "/includes/head.php";
 </div>
 
 <!-- ===== MOBILE FIXED BAR ===== -->
-<div class="fixed-bottom bg-white border-top shadow-lg p-3 d-lg-none">
-    <div class="d-flex justify-content-between align-items-center mb-2">
-
-        <!-- 🔑 ÚNICO TRIGGER DEL MODAL -->
-        <div
-            class="cursor-pointer"
-            data-bs-toggle="modal"
-            data-bs-target="#modalResumenMobile"
-            role="button"
-        >
-            <span class="d-block small text-muted fw-bold lh-1">
-                TOTAL <i class="ti ti-chevron-up ms-1 text-primary"></i>
-            </span>
-
-            <span class="h3 fw-bolder text-primary" id="lblTotalMobile">$0</span>
-
-            <!-- BOTÓN VISUAL (NO dispara modal) -->
-            <button
-                type="button"
-                class="btn btn-sm btn-primary btn-resumen-tickets ms-2 mb-2"
-                title="Ver mis números"
-            >
-                <i class="ti ti-eye me-1"></i>
-                <span id="lblCantidadDesktop" class="fw-bold">0</span>
-            </button>
-        </div>
+<div class="fixed-bottom vender-mobile-bar d-lg-none">
+    <div
+        class="vender-mobile-bar__info"
+        data-bs-toggle="modal"
+        data-bs-target="#modalResumenMobile"
+        role="button"
+        aria-label="Ver resumen de números"
+    >
+        <span class="vender-mobile-bar__total" id="lblTotalMobile">$0</span>
+        <span class="vender-mobile-bar__meta">
+            <span id="lblCantidadMobile">0</span> nums · tocar para ver <i class="ti ti-chevron-up"></i>
+        </span>
     </div>
 
     <button
-        class="btn btn-success w-100 py-3 fw-bold rounded-pill shadow"
+        type="button"
+        class="btn btn-success vender-mobile-bar__btn shadow-sm"
         onclick="procesarVentaMobile()"
     >
-        CONFIRMAR VENTA <i class="ti ti-check ms-1"></i>
+        Confirmar <i class="ti ti-check ms-1"></i>
     </button>
 </div>
 
@@ -285,7 +273,7 @@ $extra_js = '
 <link href="' . ASSETS_URL . '/libs/select2/css/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
 <script src="' . ASSETS_URL . '/libs/select2/js/select2.min.js"></script>
 <script src="' . ASSETS_URL . '/js/departamentos-ciudades.js"></script>
-<script src="' . ASSETS_URL . '/js/vender.js?v=5"></script> 
+<script src="' . ASSETS_URL . '/js/vender.js?v=6"></script> 
 ';
 include_once ROOT_PATH . "/includes/footer.php";
 ?>

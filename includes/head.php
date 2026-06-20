@@ -14,8 +14,8 @@ $siteFavicon = SiteConfig::favicon();
   <title><?php echo isset($page_title) ? htmlspecialchars($page_title) . ' - ' . htmlspecialchars($siteName) : htmlspecialchars($siteName); ?></title>
   <link rel="shortcut icon" type="image/png" href="<?= htmlspecialchars($siteFavicon) ?>" />
   <link rel="stylesheet" href="<?= ASSETS_URL ?>/css/styles.min-v2.css" />
-  <link rel="stylesheet" href="<?= ASSETS_URL ?>/css/theme-base.css?v=11" />
-  <link rel="stylesheet" href="<?= ASSETS_URL ?>/css/admin-numbers.css?v=4" />
+  <link rel="stylesheet" href="<?= ASSETS_URL ?>/css/theme-base.css?v=13" />
+  <link rel="stylesheet" href="<?= ASSETS_URL ?>/css/admin-numbers.css?v=6" />
   <link rel="stylesheet" href="<?= ASSETS_URL ?>/css/admin-tables.css?v=21" />
   <style>
     /* Sidebar: altura completa y scroll solo si hace falta */

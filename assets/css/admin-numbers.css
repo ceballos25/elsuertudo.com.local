@@ -23,9 +23,10 @@
     justify-content: center;
 }
 
-.number-box:hover {
+.number-box:hover:not(.sold):not(.reserved) {
     transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(var(--raffle-color-primary-rgb), 0.15);
+    box-shadow: 0 6px 16px rgba(var(--raffle-color-primary-rgb), 0.14);
+    border-color: var(--raffle-color-primary);
 }
 
 .number-box.selected {
@@ -45,16 +46,17 @@
 
 .number-box.sold,
 .number-box.reserved {
+    cursor: pointer;
     background: var(--raffle-color-sold-bg);
     border-color: var(--raffle-color-sold-border);
+    border-style: dashed;
     color: var(--raffle-color-sold-text);
-    cursor: not-allowed;
 }
 
 .number-box.sold:hover,
 .number-box.reserved:hover {
     transform: none;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+    box-shadow: none;
 }
 
 /* Mini cuadro — réplica del index para listas y tablas admin */

@@ -1,0 +1,57 @@
+/* Barra fija mobile — vender.php (compacta) */
+
+.vender-mobile-spacer {
+    height: 68px;
+}
+
+.vender-mobile-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.45rem 0.75rem;
+    padding-bottom: calc(0.45rem + env(safe-area-inset-bottom, 0px));
+    background: #fff;
+    border-top: 1px solid #dee2e6;
+    box-shadow: 0 -4px 14px rgba(0, 0, 0, 0.08);
+    z-index: 1040;
+}
+
+.vender-mobile-bar__info {
+    flex: 1 1 auto;
+    min-width: 0;
+    cursor: pointer;
+    line-height: 1.15;
+}
+
+.vender-mobile-bar__total {
+    display: block;
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: var(--raffle-color-primary, #014005);
+}
+
+.vender-mobile-bar__meta {
+    display: block;
+    font-size: 0.72rem;
+    color: #6c757d;
+}
+
+.vender-mobile-bar__btn {
+    flex: 0 0 auto;
+    padding: 0.5rem 0.9rem;
+    font-size: 0.82rem;
+    font-weight: 700;
+    border-radius: 999px;
+    white-space: nowrap;
+}
+
+@media (max-width: 360px) {
+    .vender-mobile-bar__btn {
+        padding: 0.45rem 0.7rem;
+        font-size: 0.78rem;
+    }
+
+    .vender-mobile-bar__total {
+        font-size: 1.05rem;
+    }
+}

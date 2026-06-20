@@ -17,8 +17,8 @@ $siteFavicon = SiteConfig::favicon();
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/theme-base.css?v=11">
-    <link rel="stylesheet" href="assets/css/front.css?v=48">
+    <link rel="stylesheet" href="assets/css/theme-base.css?v=13">
+    <link rel="stylesheet" href="assets/css/front.css?v=50">
     <link rel="shortcut icon" href="<?= htmlspecialchars($siteFavicon) ?>" type="image/x-icon">
 </head>
 
@@ -149,7 +149,8 @@ $siteFavicon = SiteConfig::favicon();
                     <div class="d-flex flex-wrap gap-3 small text-muted landing-legend pb-2">
                         <span><span class="landing-legend-dot landing-legend-free"></span> Disponible</span>
                         <span><span class="landing-legend-dot landing-legend-selected"></span> Seleccionado</span>
-                        <span><span class="landing-legend-dot landing-legend-sold"></span> Vendido / Reservado</span>
+                        <span><span class="landing-legend-dot landing-legend-reserved"></span> Reservado</span>
+                        <span><span class="landing-legend-dot landing-legend-sold"></span> Vendido</span>
                     </div>
                 </div>
 

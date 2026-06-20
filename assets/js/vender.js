@@ -225,17 +225,9 @@ async function cargarRifasActivas() {
             select.add(opt);
         });
 
-        // ✅ SELECCIONAR RIFA POR DEFECTO (ID = 1)
-        const DEFAULT_RAFFLE_ID = '1';
-
-        const existe = [...select.options].some(
-            o => o.value === DEFAULT_RAFFLE_ID
-        );
-
-        if (existe) {
-            select.value = DEFAULT_RAFFLE_ID;
-
-            // 🔥 dispara exactamente la misma lógica
+        const primeraActiva = [...select.options].find(o => o.value);
+        if (primeraActiva) {
+            select.value = primeraActiva.value;
             await cambiarRifa();
         }
 
@@ -328,7 +320,7 @@ function renderizarGrid(filtro = '') {
             classes += ' sold';
             clickable = false;
         } else if (status === 2) {
-            classes += ' sold';
+            classes += ' reserved';
             clickable = false;
         } else if (enCarrito) {
             classes += ' selected';
