@@ -61,7 +61,12 @@ if ($detail) {
 
                                     <div class="mb-4">
                                         <label for="password" class="form-label">Contraseña</label>
-                                        <input type="password" class="form-control" id="password" name="password" required>
+                                        <div class="input-group">
+                                            <input type="password" class="form-control" id="password" name="password" required autocomplete="current-password">
+                                            <button type="button" class="btn btn-outline-secondary" id="togglePassword" aria-label="Mostrar contraseña" aria-pressed="false">
+                                                <i class="ti ti-eye" id="togglePasswordIcon" aria-hidden="true"></i>
+                                            </button>
+                                        </div>
                                     </div>
 
                                     <button type="submit" class="btn btn-primary w-100 py-8 fs-4 mb-4 rounded-2">
@@ -77,5 +82,22 @@ if ($detail) {
     </div>
     <script src="./assets/libs/jquery/dist/jquery.min.js"></script>
     <script src="./assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        (function () {
+            const input = document.getElementById('password');
+            const btn = document.getElementById('togglePassword');
+            const icon = document.getElementById('togglePasswordIcon');
+            if (!input || !btn || !icon) return;
+
+            btn.addEventListener('click', function () {
+                const show = input.type === 'password';
+                input.type = show ? 'text' : 'password';
+                icon.classList.toggle('ti-eye', !show);
+                icon.classList.toggle('ti-eye-off', show);
+                btn.setAttribute('aria-label', show ? 'Ocultar contraseña' : 'Mostrar contraseña');
+                btn.setAttribute('aria-pressed', show ? 'true' : 'false');
+            });
+        })();
+    </script>
 </body>
 </html>
