@@ -35,6 +35,15 @@ if ($detail) {
     <title>Login - <?= htmlspecialchars($siteName) ?></title>
     <link rel="shortcut icon" type="image/png" href="<?= htmlspecialchars($siteFavicon) ?>" />
     <link rel="stylesheet" href="./assets/css/styles.min-v2.css" />
+    <style>
+        .login-logo {
+            max-width: min(260px, 90%);
+            max-height: 120px;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+        }
+    </style>
 </head>
 <body>
     <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
@@ -46,7 +55,7 @@ if ($detail) {
                         <div class="card mb-0">
                             <div class="card-body">
                                 <a href="/" class="text-nowrap logo-img text-center d-block py-3 w-100">
-                                    <img src="<?= htmlspecialchars($siteLogo) ?>" width="200" alt="<?= htmlspecialchars($siteName) ?>">
+                                    <img src="<?= htmlspecialchars($siteLogo) ?>" class="login-logo" alt="<?= htmlspecialchars($siteName) ?>">
                                 </a>
                                 <?php if ($msg): ?>
                                     <div class="alert alert-danger" role="alert">

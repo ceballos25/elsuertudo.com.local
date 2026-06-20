@@ -96,8 +96,8 @@
 }
 
 .landing-logo {
-    max-height: 50px;
-    max-width: 160px;
+    max-height: 72px;
+    max-width: min(240px, 72vw);
     width: auto;
     height: auto;
     object-fit: contain;

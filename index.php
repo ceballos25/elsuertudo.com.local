@@ -18,7 +18,7 @@ $siteFavicon = SiteConfig::favicon();
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/theme-base.css?v=11">
-    <link rel="stylesheet" href="assets/css/front.css?v=47">
+    <link rel="stylesheet" href="assets/css/front.css?v=48">
     <link rel="shortcut icon" href="<?= htmlspecialchars($siteFavicon) ?>" type="image/x-icon">
 </head>
 
@@ -29,10 +29,7 @@ $siteFavicon = SiteConfig::favicon();
     <div class="container">
         <div class="d-flex justify-content-between align-items-center py-3">
             <a href="#" class="landing-brand text-decoration-none d-flex align-items-center gap-2">
-                <picture>
-                    <source srcset="assets/images/logos/logo-nav.webp" type="image/webp">
-                    <img src="<?= htmlspecialchars($siteLogo) ?>" alt="<?= htmlspecialchars($siteName) ?>" class="landing-logo">
-                </picture>
+                <img src="<?= htmlspecialchars($siteLogo) ?>" alt="<?= htmlspecialchars($siteName) ?>" class="landing-logo">
             </a>
             <div class="d-flex align-items-center gap-2">
                 <a href="#" class="btn btn-sm btn-outline-primary rounded-circle landing-social d-none" data-facebook aria-label="Facebook">

@@ -130,6 +130,7 @@ class ReceiptService
     private function logoLocalCandidates(): array
     {
         $candidates = [
+            ROOT_PATH . '/assets/images/logos/logo-dinamicas.jpg' => ASSETS_URL . '/images/logos/logo-dinamicas.jpg',
             ROOT_PATH . '/assets/images/logos/logo.jpg' => ASSETS_URL . '/images/logos/logo.jpg',
             ROOT_PATH . '/assets/images/logos/logo.png' => ASSETS_URL . '/images/logos/logo.png',
         ];
