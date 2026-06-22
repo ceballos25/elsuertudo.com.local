@@ -613,9 +613,7 @@ function resetBotonConfirmar() {
     const btn = document.querySelector('#checkoutModal button.btn-success');
     if (btn) {
         btn.disabled = false;
-        btn.innerHTML = RAFFLE_IS_FREE
-            ? '<i class="bi bi-check-circle me-1"></i>Registrar'
-            : '<i class="bi bi-check-circle me-1"></i>Confirmar';
+        btn.innerHTML = '<i class="bi bi-check-circle me-1"></i>Confirmar';
     }
 }
 
@@ -659,14 +657,10 @@ async function confirmarReserva() {
 
     const idsTickets = Array.from(selectedTickets.keys());
 
-    if (RAFFLE_IS_FREE) {
-        await confirmarParticipacionGratis(idsTickets, nombre, celular, btn);
-        return;
-    }
-
     const phone = SETTINGS.whatsapp_line_main || SETTINGS.whatsapp_line_support;
     const numerosVisuales = Array.from(selectedTickets.values()).join(', ');
     const total = selectedTickets.size * PRECIO_BOLETA;
+    const totalFmt = RAFFLE_IS_FREE ? 'Gratis' : '$' + total.toLocaleString('es-CO');
 
     const fd = new FormData();
     fd.append('action', 'crear_reserva');
@@ -704,8 +698,8 @@ async function confirmarReserva() {
                 });
             } else {
                 mostrarAlertaUI({
-                    type: 'error',
-                    title: 'Error',
+                    type: j.existing ? 'info' : 'error',
+                    title: j.existing ? 'Ya participaste' : 'Error',
                     message: j.message || 'Ocurrió un error.'
                 });
             }
@@ -718,7 +712,7 @@ async function confirmarReserva() {
             "Hola 👋 quiero confirmar mi compra:\n\n" +
             "🔢 Cantidad: " + idsTickets.length + "\n" +
             "🎟 Números: " + numerosVisuales + "\n" +
-            "💰 Total: $" + total.toLocaleString('es-CO') + "\n\n" +
+            "💰 Total: " + totalFmt + "\n\n" +
             "👤 Cliente: " + nombre + "\n" +
             "📱 Celular: " + celular + "\n\n" +
             "🧾 Código: " + j.token;
@@ -754,63 +748,6 @@ async function confirmarReserva() {
     }
 }
 
-async function confirmarParticipacionGratis(idsTickets, nombre, celular, btn) {
-    const fd = new FormData();
-    fd.append('action', 'registrar_gratis');
-    fd.append('id_raffle', ID_RAFFLE);
-    fd.append('name_customer', nombre);
-    fd.append('phone_customer', celular);
-    fd.append('tickets', JSON.stringify(idsTickets));
-
-    try {
-        const j = await API.post('participacion', fd);
-
-        if (!j.success) {
-            if (Array.isArray(j.unavailable) && j.unavailable.length > 0) {
-                j.unavailable.forEach(id => selectedTickets.delete(Number(id)));
-                updateCheckoutUI();
-                await cargarNumeros();
-            }
-
-            bootstrap.Modal.getInstance(document.getElementById('checkoutModal'))?.hide();
-
-            mostrarAlertaUI({
-                type: j.existing ? 'info' : 'error',
-                title: j.existing ? 'Ya participaste' : 'No se pudo registrar',
-                message: escHtml(j.message || 'Ocurrió un error.'),
-                blocking: true
-            });
-            resetBotonConfirmar();
-            return;
-        }
-
-        bootstrap.Modal.getInstance(document.getElementById('checkoutModal'))?.hide();
-
-        const numeros = Array.isArray(j.numbers) ? j.numbers.join(', ') : Array.from(selectedTickets.values()).join(', ');
-
-        mostrarAlertaUI({
-            type: 'success',
-            title: '¡Número registrado!',
-            message:
-                `Tu número <strong>${escHtml(numeros)}</strong> quedó confirmado.` +
-                (j.code_sale ? `<br><small class="text-muted">Código: ${escHtml(j.code_sale)}</small>` : ''),
-            blocking: true
-        });
-
-        selectedTickets.clear();
-        updateCheckoutUI();
-        await cargarNumeros();
-        resetBotonConfirmar();
-    } catch (err) {
-        console.error(err);
-        mostrarAlertaUI({
-            type: 'error',
-            title: 'Error de conexión',
-            message: 'Intenta nuevamente.'
-        });
-        resetBotonConfirmar();
-    }
-}
 /**
  * Función dedicada para abrir WhatsApp de forma confiable
  * Usa múltiples estrategias para máxima compatibilidad
@@ -888,19 +825,19 @@ function applyFreeModeUI() {
     const primaryBtn = document.getElementById('landingCheckoutBtn');
     if (primaryBtn) {
         primaryBtn.innerHTML = RAFFLE_IS_FREE
-            ? '<i class="bi bi-check-circle me-2"></i>Confirmar número'
+            ? '<i class="bi bi-whatsapp me-2"></i>Reservar número'
             : '<i class="bi bi-credit-card me-2"></i>Pagar ahora';
     }
 
     const mobileBtn = document.getElementById('landingCheckoutBtnMobile');
     if (mobileBtn) {
-        mobileBtn.textContent = RAFFLE_IS_FREE ? 'Confirmar' : 'Pagar';
+        mobileBtn.textContent = RAFFLE_IS_FREE ? 'Reservar' : 'Pagar';
     }
 
     const note = document.getElementById('landingCheckoutNote');
     if (note) {
         note.innerHTML = RAFFLE_IS_FREE
-            ? '<i class="bi bi-person-check me-1"></i>1 número por persona · Confirmación inmediata'
+            ? '<i class="bi bi-shield-check me-1"></i>1 número por persona · Reserva vía WhatsApp'
             : '<i class="bi bi-shield-check me-1"></i>Reserva segura vía WhatsApp';
     }
 
@@ -914,14 +851,14 @@ function applyFreeModeUI() {
     const modalSubtitle = document.getElementById('checkoutModalSubtitle');
     if (modalSubtitle) {
         modalSubtitle.textContent = RAFFLE_IS_FREE
-            ? 'Completa tus datos para registrar tu número'
+            ? 'Completa tus datos para reservar tu número'
             : 'Completa tus datos para reservar';
     }
 
     const confirmBtn = document.querySelector('#checkoutModal button.btn-success');
     if (confirmBtn && !confirmBtn.disabled) {
         confirmBtn.innerHTML = RAFFLE_IS_FREE
-            ? '<i class="bi bi-check-circle me-1"></i>Registrar'
+            ? '<i class="bi bi-check-circle me-1"></i>Confirmar'
             : '<i class="bi bi-check-circle me-1"></i>Confirmar';
     }
 

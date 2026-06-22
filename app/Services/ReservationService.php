@@ -11,6 +11,7 @@ use App\Models\Reservation;
 use App\Models\ReservationTicket;
 use App\Models\Sale;
 use App\Models\Ticket;
+use App\Support\ParticipationRules;
 
 class ReservationService
 {
@@ -43,13 +44,9 @@ class ReservationService
             return ['success' => false, 'message' => 'Nombre y teléfono obligatorios'];
         }
 
-        $tickets = $this->parseTickets($data['tickets'] ?? null);
-        if (empty($tickets)) {
+        $tickets = ParticipationRules::parseTicketIds($data['tickets'] ?? null);
+        if ($tickets === []) {
             return ['success' => false, 'message' => 'No se enviaron tickets válidos'];
-        }
-
-        if (count($tickets) > SaleService::MAX_TICKETS_PER_ORDER) {
-            return ['success' => false, 'message' => 'Máximo ' . SaleService::MAX_TICKETS_PER_ORDER . ' números por reserva'];
         }
 
         $idRaffle = (int) ($data['id_raffle'] ?? 0);
@@ -69,15 +66,20 @@ class ReservationService
             return ['success' => false, 'message' => 'Rifa temporalmente detenida'];
         }
 
-        if (RaffleMode::isFree($raffle)) {
-            return [
-                'success' => false,
-                'message' => 'Esta rifa es gratuita. Confirma tu número directamente en la página.',
-            ];
-        }
+        $validation = ParticipationRules::assertSelection(
+            $this->ticketModel,
+            $tickets,
+            $idRaffle,
+            RaffleMode::maxTicketsPerPublicOrder($raffle)
+        );
 
-        if ($this->ticketModel->countInRaffle($tickets, $idRaffle) !== count($tickets)) {
-            return ['success' => false, 'message' => 'Uno o más números no pertenecen a esta rifa'];
+        if (!$validation['ok']) {
+            $response = ['success' => false, 'message' => $validation['message']];
+            if (!empty($validation['ticket_ids'])) {
+                $response['unavailable'] = $validation['ticket_ids'];
+            }
+
+            return $response;
         }
 
         try {
@@ -89,13 +91,19 @@ class ReservationService
             return ['success' => false, 'message' => 'Error al gestionar el cliente'];
         }
 
-        $unavailable = $this->checkAvailability($tickets, $idRaffle);
-        if (!empty($unavailable)) {
-            return [
-                'success'     => false,
-                'message'     => 'Los siguientes tickets no están disponibles: ' . implode(', ', $unavailable),
-                'unavailable' => $unavailable,
-            ];
+        if (RaffleMode::isFree($raffle)) {
+            $existing = $this->ticketModel->findParticipationByCustomerInRaffle($idCustomer, $idRaffle);
+            if ($existing !== null) {
+                return [
+                    'success'  => false,
+                    'message'  => 'Ya participaste en esta rifa con el número ' . $existing->number_ticket,
+                    'existing' => true,
+                    'data'     => [
+                        'number_ticket' => $existing->number_ticket,
+                        'id_ticket'     => (int) $existing->id_ticket,
+                    ],
+                ];
+            }
         }
 
         $db = Database::getInstance();
@@ -292,9 +300,13 @@ class ReservationService
         $cantidad = count($ticketIds);
         $total = $cantidad * (float) $raffle->price_raffle;
 
-        if ($total <= 0) {
+        if ($total <= 0 && !RaffleMode::allowsZeroTotal($raffle)) {
             return ['success' => false, 'message' => 'Total inválido'];
         }
+
+        $paymentMethod = RaffleMode::isFree($raffle)
+            ? RaffleMode::PAYMENT_FREE
+            : self::METODO_WEB;
 
         $db = Database::getInstance();
 
@@ -311,7 +323,7 @@ class ReservationService
                 'quantity_sale'         => $cantidad,
                 'total_sale'            => $total,
                 'code_sale'             => $resv->token_reservation,
-                'payment_method_sale'   => self::METODO_WEB,
+                'payment_method_sale'   => $paymentMethod,
                 'status_sale'           => 1,
                 'id_admin_sale'         => Auth::userId(),
             ]);

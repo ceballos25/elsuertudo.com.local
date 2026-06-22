@@ -391,7 +391,7 @@ $siteFavicon = SiteConfig::favicon();
 <?php require_once 'includes/pagination_script.php'; ?>
 <script>window.SITE_URL = <?= json_encode(BASE_URL) ?>; window.API_URL = <?= json_encode(BASE_URL . '/front/ajax/api.php') ?>;</script>
 <script src="assets/js/api.js?v=3"></script>
-<script src="assets/js/raffle.js?v=16"></script>
+<script src="assets/js/raffle.js?v=17"></script>
 
 </body>
 </html>
