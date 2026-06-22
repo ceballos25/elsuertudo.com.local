@@ -67,6 +67,7 @@ class ReceiptService
         $reemplazos = [
             '{Logo}'                  => $this->safeLogoUrl(),
             '{Nombre Cliente}'        => $this->esc($venta->name_customer ?? '---'),
+            '{PhoneCustomer}'         => $this->esc(preg_replace('/\D/', '', (string) ($venta->phone_customer ?? ''))),
             '{TituloRifa}'            => $this->esc($venta->title_raffle ?? ''),
             '{ID}'                    => $this->esc($venta->id_sale ?? ''),
             '{Fecha}'                 => $this->esc($fecha),
