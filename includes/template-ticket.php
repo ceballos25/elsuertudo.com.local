@@ -1,5 +1,5 @@
 
-<div id="voucherCapture" data-phone-customer="{PhoneCustomer}" data-customer-name="{Nombre Cliente}">
+<div id="voucherCapture">
     <div style="max-width:560px;margin:22px auto;font-family:'Segoe UI',Arial,sans-serif;background:#f4f6f8;padding:14px;">
         <table width="100%" cellspacing="0" cellpadding="0" style="background:#ffffff; border-radius:16px; overflow:hidden; color:#1f2933; border-collapse:collapse; box-shadow:0 8px 24px rgba(0,0,0,0.08);">
             <tr>
