@@ -5,9 +5,28 @@
     let preparingShare = false;
     let prepareTimer = null;
 
-    function esIOS() {
-        return /iPhone|iPad|iPod/i.test(navigator.userAgent)
-            || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    function normalizeWhatsAppPhone(raw) {
+        const digits = String(raw || '').replace(/\D/g, '');
+        if (!digits) return '';
+        if (digits.length === 10 && digits.startsWith('3')) return '57' + digits;
+        if (digits.startsWith('57') && digits.length >= 12) return digits;
+        return digits.length >= 11 ? digits : '';
+    }
+
+    function buildWhatsAppUrl(phone, text) {
+        return 'https://api.whatsapp.com/send?phone=' + encodeURIComponent(phone)
+            + '&text=' + encodeURIComponent(text);
+    }
+
+    function abrirWhatsAppCliente(phone, text) {
+        window.location.href = buildWhatsAppUrl(phone, text);
+    }
+
+    function buildMensajeComprobante(nombre, url) {
+        const saludo = nombre ? 'Hola, ' + nombre + '.' : 'Hola.';
+        return saludo
+            + '\n\nGracias por tu participación. Aquí está tu comprobante de venta:\n\n'
+            + url;
     }
 
     function getShareButton() {
@@ -16,26 +35,12 @@
 
     function resetShareButton(btn) {
         if (!btn) return;
-        btn.dataset.sharePending = '0';
         btn.style.opacity = '';
-        btn.style.boxShadow = '';
         btn.style.pointerEvents = 'auto';
-    }
-
-    function markSharePending(btn) {
-        if (!btn) return;
-        btn.dataset.sharePending = '1';
-        btn.style.opacity = '1';
-        btn.style.boxShadow = '0 0 0 3px rgba(4, 217, 18, 0.45)';
-        btn.style.pointerEvents = 'auto';
-        if (typeof alertify !== 'undefined') {
-            alertify.message('Listo. Toca Compartir otra vez.', 3);
-        }
     }
 
     function invalidateShareCache() {
         voucherShareCache = null;
-        resetShareButton(getShareButton());
     }
 
     async function buildVoucherShareFile() {
@@ -72,7 +77,7 @@
             await buildVoucherShareFile();
         } catch (err) {
             console.error('Error al preparar comprobante:', err);
-            voucherShareCache = null;
+            invalidateShareCache();
         } finally {
             preparingShare = false;
         }
@@ -80,35 +85,46 @@
 
     function schedulePrepareVoucherShare() {
         clearTimeout(prepareTimer);
-        prepareTimer = setTimeout(() => {
-            prepareVoucherShare();
-        }, 350);
+        prepareTimer = setTimeout(prepareVoucherShare, 350);
     }
 
-    async function openNativeShare(file) {
-        if (!navigator.canShare || !navigator.canShare({ files: [file] })) {
-            return false;
+    async function subirComprobante(blob, fileName, idSale) {
+        const fd = new FormData();
+        fd.append('action', 'subir_comprobante_whatsapp');
+        fd.append('comprobante', blob, fileName);
+        if (idSale) fd.append('id_sale', idSale);
+
+        if (typeof API !== 'undefined' && API.post) {
+            return API.post('ventas', fd);
         }
-        await navigator.share({ files: [file], title: 'Comprobante de venta' });
-        return true;
+
+        fd.append('module', 'ventas');
+        const res = await fetch(window.API_URL || 'front/ajax/api.php', {
+            method: 'POST',
+            body: fd,
+            cache: 'no-store',
+        });
+        return res.json();
     }
 
-    function downloadShareBlob(cache) {
-        const url = URL.createObjectURL(cache.blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = cache.fileName;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
+    function aviso(mensaje, tipo) {
+        if (typeof alertify === 'undefined') return;
+        if (tipo === 'error') alertify.error(mensaje, 5);
+        else alertify.success(mensaje, 4);
     }
 
     window.shareVoucher = async function shareVoucher(btn) {
         const target = document.getElementById('voucherCapture');
         if (!target || typeof html2canvas === 'undefined') return;
 
-        const codigo = target.querySelector('[data-codigo]')?.getAttribute('data-codigo') || 'comprobante';
+        const phone = normalizeWhatsAppPhone(target.dataset.phoneCustomer || '');
+        const customerName = (target.dataset.customerName || '').trim();
+        const idSale = (target.dataset.idSale || '').trim();
+
+        if (!phone) {
+            aviso('Este comprobante no tiene celular del cliente.', 'error');
+            return;
+        }
 
         if (btn) {
             btn.style.pointerEvents = 'none';
@@ -116,64 +132,31 @@
         }
 
         try {
-            // iOS: segundo toque con gesto válido (Safari pierde el gesto tras html2canvas)
-            if (btn?.dataset?.sharePending === '1' && voucherShareCache?.codigo === codigo) {
-                resetShareButton(btn);
-                await openNativeShare(voucherShareCache.file);
-                return;
-            }
-
-            // Imagen ya precargada → compartir en el mismo toque
-            if (voucherShareCache?.codigo === codigo) {
-                try {
-                    const shared = await openNativeShare(voucherShareCache.file);
-                    if (shared) return;
-                    downloadShareBlob(voucherShareCache);
-                    return;
-                } catch (err) {
-                    if (err?.name === 'AbortError') return;
-                    if (err?.name === 'NotAllowedError' && esIOS()) {
-                        markSharePending(btn);
-                        return;
-                    }
-                    throw err;
-                }
-            }
-
             const cache = await buildVoucherShareFile();
-            if (!cache) return;
-
-            if (esIOS()) {
-                markSharePending(btn);
+            if (!cache) {
+                aviso('No se pudo generar la imagen del comprobante.', 'error');
                 return;
             }
 
-            try {
-                const shared = await openNativeShare(cache.file);
-                if (!shared) downloadShareBlob(cache);
-            } catch (err) {
-                if (err?.name === 'AbortError') return;
-                if (err?.name === 'NotAllowedError') {
-                    markSharePending(btn);
-                    return;
-                }
-                throw err;
+            const uploaded = await subirComprobante(cache.blob, cache.fileName, idSale);
+            if (!uploaded?.success || !uploaded.url) {
+                aviso(uploaded?.message || 'No se pudo subir el comprobante.', 'error');
+                return;
             }
+
+            const mensaje = buildMensajeComprobante(customerName, uploaded.url);
+            abrirWhatsAppCliente(phone, mensaje);
         } catch (err) {
-            if (err?.name !== 'AbortError') {
-                console.error('Error al compartir comprobante:', err);
-            }
+            console.error('Error al compartir comprobante:', err);
+            aviso('Error al compartir. Intenta de nuevo.', 'error');
         } finally {
-            if (btn && btn.dataset.sharePending !== '1') {
-                resetShareButton(btn);
-            }
+            resetShareButton(btn);
         }
     };
 
     document.addEventListener('DOMContentLoaded', function () {
         const observer = new MutationObserver(function () {
-            const target = document.getElementById('voucherCapture');
-            if (!target) {
+            if (!document.getElementById('voucherCapture')) {
                 invalidateShareCache();
                 return;
             }

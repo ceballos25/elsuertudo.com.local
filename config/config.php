@@ -72,7 +72,7 @@ use App\Core\Auth;
  */
 if (php_sapi_name() !== 'cli') {
     $currentScript = basename($_SERVER['SCRIPT_FILENAME'] ?? '');
-    $publicPages = ['index.php', 'dash.php', 'logout.php', 'login.php'];
+    $publicPages = ['index.php', 'dash.php', 'logout.php', 'login.php', 'comprobante.php'];
 
     $isAjax = str_contains($_SERVER['SCRIPT_FILENAME'] ?? '', '/ajax/api.php');
     $isPublicPage = in_array($currentScript, $publicPages) || $isAjax;

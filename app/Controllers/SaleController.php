@@ -25,8 +25,9 @@ class SaleController extends Controller
         $result = match ($action) {
             'obtener'              => $this->service->list($_POST),
             'crear_venta'          => $this->service->create($_POST),
-            'detalle_venta'        => $this->service->detail((int) ($_POST['id_sale'] ?? 0)),
-            'gestion_venta'        => $this->service->getForManage((int) ($_POST['id_sale'] ?? 0)),
+            'detalle_venta'              => $this->service->detail((int) ($_POST['id_sale'] ?? 0)),
+            'subir_comprobante_whatsapp' => $this->service->uploadReceiptShare($_POST, $_FILES),
+            'gestion_venta'              => $this->service->getForManage((int) ($_POST['id_sale'] ?? 0)),
             'cambiar_cliente'      => $this->service->changeCustomer($_POST),
             'liberar_numeros'      => $this->service->releaseTickets($_POST),
             'cancelar_venta'       => $this->service->cancel((int) ($_POST['id_sale'] ?? 0)),

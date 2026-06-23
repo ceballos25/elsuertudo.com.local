@@ -22,6 +22,7 @@ class SaleService
     private Raffle $raffleModel;
     private CustomerService $customerService;
     private ReceiptService $receiptService;
+    private ReceiptShareService $receiptShareService;
     private SaleFulfillmentService $fulfillment;
 
     public function __construct()
@@ -31,6 +32,7 @@ class SaleService
         $this->raffleModel = new Raffle();
         $this->customerService = new CustomerService();
         $this->receiptService = new ReceiptService();
+        $this->receiptShareService = new ReceiptShareService();
         $this->fulfillment = new SaleFulfillmentService();
     }
 
@@ -163,6 +165,11 @@ class SaleService
         }
 
         return ['success' => true, 'html_recibo' => $html];
+    }
+
+    public function uploadReceiptShare(array $post, array $files): array
+    {
+        return $this->receiptShareService->storeUpload($post, $files);
     }
 
     public function findByCode(string $code): array
