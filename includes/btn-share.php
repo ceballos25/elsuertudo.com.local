@@ -23,10 +23,12 @@
     }
 
     function buildMensajeComprobante(nombre, url) {
-        const saludo = nombre ? 'Hola, ' + nombre + '.' : 'Hola.';
+        const saludo = nombre ? 'Hola, ' + nombre + ' 👋' : 'Hola 👋';
         return saludo
-            + '\n\nGracias por tu participación. Aquí está tu comprobante de venta:\n\n'
-            + url;
+            + '\n\n¡Gracias por tu participación! 🙌'
+            + '\nAquí está tu comprobante de venta 🎟️✨'
+            + '\n\n' + url
+            + '\n\n¡Mucha suerte! 🍀';
     }
 
     function getShareButton() {
