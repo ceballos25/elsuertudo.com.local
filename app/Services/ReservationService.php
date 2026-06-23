@@ -82,12 +82,22 @@ class ReservationService
             return $response;
         }
 
+        $blocked = $this->customerService->assertCanPurchase([
+            'phone_customer' => $data['phone_customer'],
+        ]);
+        if ($blocked !== null) {
+            return $blocked;
+        }
+
         try {
             $idCustomer = $this->customerService->findOrCreate([
                 'name_customer'  => $data['name_customer'],
                 'phone_customer' => $data['phone_customer'],
             ]);
         } catch (\Throwable $e) {
+            if ($e->getMessage() === CustomerService::PURCHASE_BLOCKED_MESSAGE) {
+                return ['success' => false, 'message' => $e->getMessage()];
+            }
             return ['success' => false, 'message' => 'Error al gestionar el cliente'];
         }
 

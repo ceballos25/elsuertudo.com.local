@@ -27,8 +27,9 @@ class CustomerController extends Controller
             'obtener'          => $this->service->list($_POST),
             'buscar_por_celular' => $this->service->findByPhone($_POST),
             'crear'            => $this->service->create($_POST),
-            'actualizar'=> $this->service->update($_POST),
-            'eliminar'  => $this->service->delete($_POST),
+            'actualizar'         => $this->service->update($_POST),
+            'toggle_lista_negra' => $this->service->toggleBlacklist((int) ($_POST['id_customer'] ?? 0)),
+            'eliminar'           => $this->service->delete($_POST),
             default     => ['success' => false, 'message' => 'Acción no válida'],
         };
 

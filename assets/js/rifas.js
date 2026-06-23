@@ -193,6 +193,12 @@ function renderRifasCards(rifas) {
                 </button>
             </div>
 
+            <div class="rifa-card__link">
+                <button type="button" class="btn btn-sm btn-outline-success w-100" onclick="descargarInformeVentas(${r.id_raffle})" title="Descargar informe de ventas">
+                    <i class="ti ti-file-spreadsheet me-1"></i> Informe Excel
+                </button>
+            </div>
+
             <footer class="rifa-card__actions">
                 <button type="button" class="btn btn-sm btn-outline-primary" onclick="editarRifa(${r.id_raffle})">
                     <i class="ti ti-edit me-1"></i> Editar
@@ -253,6 +259,17 @@ function copiarEnlaceRifaFallback(text) {
 }
 
 window.copiarEnlaceRifa = copiarEnlaceRifa;
+
+function descargarInformeVentas(idRaffle) {
+    if (!idRaffle) {
+        alertify.error('Rifa no válida');
+        return;
+    }
+    const base = (window.SITE_URL || window.location.origin).replace(/\/$/, '');
+    window.location.href = `${base}/front/export-ventas-rifa.php?id_raffle=${encodeURIComponent(idRaffle)}`;
+}
+
+window.descargarInformeVentas = descargarInformeVentas;
 
 function syncPrecioGratisUI() {
     const esGratis = document.getElementById('esGratis');

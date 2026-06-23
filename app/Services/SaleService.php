@@ -121,8 +121,17 @@ class SaleService
             ];
         }
 
+        $blocked = $this->customerService->assertCanPurchase($data);
+        if ($blocked !== null) {
+            return $blocked;
+        }
+
         $idCliente = $this->customerService->findOrCreateFromSale($data);
         if (!$idCliente) {
+            $retry = $this->customerService->assertCanPurchase($data);
+            if ($retry !== null) {
+                return $retry;
+            }
             return ['success' => false, 'message' => 'Error al procesar cliente'];
         }
 

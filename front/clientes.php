@@ -37,7 +37,7 @@ include_once ROOT_PATH . "/includes/head.php";
                                 <select id="filterStatus" class="form-select form-select-sm">
                                     <option value="">Todos</option>
                                     <option value="1">Activos</option>
-                                    <option value="0">Inactivos</option>
+                                    <option value="0">Lista negra</option>
                                 </select>
                             </div>
                             <div class="col-md-3">
@@ -108,7 +108,7 @@ include_once ROOT_PATH . "/includes/head.php";
                             <label class="form-label small fw-bold">Estado <span class="text-danger">*</span></label>
                             <select class="form-select" id="estado">
                                 <option value="1">Activo</option>
-                                <option value="0">Inactivo</option>
+                                <option value="0">Lista negra</option>
                             </select>
                         </div>
                     </div>
@@ -139,6 +139,6 @@ include_once ROOT_PATH . "/includes/head.php";
 </div>
 
 <?php
-$extra_js = '<script src="' . ASSETS_URL . '/js/clientes.js?v=3"></script>';
+$extra_js = '<script src="' . ASSETS_URL . '/js/clientes.js?v=5"></script>';
 include_once ROOT_PATH . "/includes/footer.php";
 ?>

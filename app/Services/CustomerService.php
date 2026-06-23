@@ -6,6 +6,12 @@ use App\Models\Customer;
 
 class CustomerService
 {
+    public const STATUS_ACTIVE = 1;
+    public const STATUS_BLACKLIST = 0;
+
+    public const PURCHASE_BLOCKED_MESSAGE =
+        'Lo sentimos, estamos presentando problemas técnicos. Inténtalo de nuevo más tarde.';
+
     private Customer $model;
 
     public function __construct()
@@ -27,6 +33,9 @@ class CustomerService
         $existing = $this->model->findByPhone($phone);
 
         if ($existing) {
+            if ($this->isBlacklisted($existing)) {
+                throw new \RuntimeException(self::PURCHASE_BLOCKED_MESSAGE);
+            }
             return (int) $existing->id_customer;
         }
 
@@ -59,13 +68,19 @@ class CustomerService
     {
         if (!empty($data['id_customer'])) {
             $existing = $this->model->find((int) $data['id_customer']);
-            return $existing ? (int) $existing->id_customer : null;
+            if (!$existing || $this->isBlacklisted($existing)) {
+                return null;
+            }
+            return (int) $existing->id_customer;
         }
 
         $phone = $this->normalizePhone($data['phone_customer'] ?? '');
         $existing = $this->model->findByPhone($phone);
 
         if ($existing) {
+            if ($this->isBlacklisted($existing)) {
+                return null;
+            }
             return (int) $existing->id_customer;
         }
 
@@ -142,6 +157,74 @@ class CustomerService
         ]);
 
         return ['success' => true, 'message' => 'Cliente actualizado correctamente'];
+    }
+
+    public function isBlacklisted(?object $customer): bool
+    {
+        return $customer !== null && (int) ($customer->status_customer ?? self::STATUS_ACTIVE) !== self::STATUS_ACTIVE;
+    }
+
+    /**
+     * @return array{success: false, message: string}|null
+     */
+    public function assertCanPurchase(array $data): ?array
+    {
+        if (!empty($data['id_customer'])) {
+            $existing = $this->model->find((int) $data['id_customer']);
+            if ($this->isBlacklisted($existing)) {
+                return $this->purchaseBlockedResponse();
+            }
+            return null;
+        }
+
+        $phone = $this->normalizePhone($data['phone_customer'] ?? '');
+        if ($phone === '') {
+            return null;
+        }
+
+        $existing = $this->model->findByPhone($phone);
+        if ($this->isBlacklisted($existing)) {
+            return $this->purchaseBlockedResponse();
+        }
+
+        return null;
+    }
+
+    public function toggleBlacklist(int $idCustomer): array
+    {
+        if ($idCustomer <= 0) {
+            return ['success' => false, 'message' => 'Cliente no válido'];
+        }
+
+        $customer = $this->model->find($idCustomer);
+        if (!$customer) {
+            return ['success' => false, 'message' => 'Cliente no encontrado'];
+        }
+
+        $newStatus = (int) $customer->status_customer === self::STATUS_ACTIVE
+            ? self::STATUS_BLACKLIST
+            : self::STATUS_ACTIVE;
+
+        $this->model->update($idCustomer, ['status_customer' => $newStatus]);
+
+        return [
+            'success'         => true,
+            'message'         => $newStatus === self::STATUS_BLACKLIST
+                ? 'Cliente agregado a lista negra'
+                : 'Cliente quitado de lista negra',
+            'status_customer' => $newStatus,
+        ];
+    }
+
+    /**
+     * @return array{success: false, message: string}
+     */
+    private function purchaseBlockedResponse(): array
+    {
+        return [
+            'success' => false,
+            'message' => self::PURCHASE_BLOCKED_MESSAGE,
+        ];
     }
 
     public function delete(array $data): array

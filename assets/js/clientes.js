@@ -122,6 +122,7 @@ function renderizarTodo() {
 
         // Estado
         const activo = parseInt(c.status_customer) === 1;
+        const enListaNegra = !activo;
 
         // WhatsApp
         const telefonoLimpio = (c.phone_customer || '').replace(/\D/g, '');
@@ -153,21 +154,36 @@ function renderizarTodo() {
             <td class="py-3 text-center" data-label="Estado">
                 <span class="badge ${
                     activo
-                        ? 'badge bg-success-subtle text-success border border-success-subtle px-3'
-                        : 'badge bg-danger-subtle text-danger border border-danger-subtle px-3'
-                } px-3 py-2 rounded-pill">
-                    ${activo ? 'Activo' : 'Inactivo'}
+                        ? 'bg-success-subtle text-success border border-success-subtle px-3'
+                        : 'bg-dark text-white border border-dark px-3'
+                } py-2 rounded-pill">
+                    ${activo ? 'Activo' : 'Lista negra'}
                 </span>
             </td>
 
             <!-- ACCIONES -->
             <td class="py-3 text-end pe-3 mobile-card-actions" data-label="">
+                <div class="d-inline-flex gap-1">
                 <button class="btn btn-icon btn-sm btn-outline-secondary border-0 rounded-circle shadow-sm"
                         onclick="editarCliente(${c.id_customer})"
-                        title="Editar Cliente"
+                        title="Editar cliente"
                         style="width: 32px; height: 32px;">
                     <i class="ti ti-edit fs-7"></i>
                 </button>
+                ${enListaNegra ? `
+                <button class="btn btn-icon btn-sm btn-outline-success border-0 rounded-circle shadow-sm"
+                        onclick="toggleListaNegra(${c.id_customer}, false)"
+                        title="Quitar de lista negra"
+                        style="width: 32px; height: 32px;">
+                    <i class="ti ti-user-check fs-7"></i>
+                </button>` : `
+                <button class="btn btn-icon btn-sm btn-outline-dark border-0 rounded-circle shadow-sm"
+                        onclick="toggleListaNegra(${c.id_customer}, true)"
+                        title="Lista negra"
+                        style="width: 32px; height: 32px;">
+                    <i class="ti ti-ban fs-7"></i>
+                </button>`}
+                </div>
             </td>
 
         </tr>`;
@@ -190,6 +206,45 @@ function editarCliente(id) {
     document.getElementById('modalTitle').textContent = 'Editar Cliente';
     if (modalCliente) modalCliente.show();
 }
+
+function toggleListaNegra(id, agregar) {
+    const c = clientesCache.find(x => parseInt(x.id_customer) === parseInt(id));
+    const nombre = c?.name_customer || 'este cliente';
+
+    const ejecutar = async () => {
+        const fd = new FormData();
+        fd.append('action', 'toggle_lista_negra');
+        fd.append('id_customer', id);
+
+        const data = await API.post('clientes', fd);
+        if (data.success) {
+            alertify.success(data.message);
+            cargarClientes();
+        } else {
+            alertify.error(data.message || 'No se pudo actualizar');
+            throw new Error(data.message || 'toggle_failed');
+        }
+    };
+
+    if (typeof confirmarAccion === 'function') {
+        confirmarAccion({
+            titulo: agregar ? 'Agregar a lista negra' : 'Quitar de lista negra',
+            mensaje: agregar
+                ? `¿Agregar a ${nombre} a la lista negra? No podrá comprar con su celular.`
+                : `¿Quitar a ${nombre} de la lista negra y permitir compras de nuevo?`,
+            textoConfirmar: agregar ? 'Sí, lista negra' : 'Sí, reactivar',
+            tipoConfirmar: agregar ? 'danger' : 'success',
+            onConfirm: ejecutar,
+        });
+        return;
+    }
+
+    if (confirm(agregar ? '¿Agregar a lista negra?' : '¿Quitar de lista negra?')) {
+        ejecutar();
+    }
+}
+
+window.toggleListaNegra = toggleListaNegra;
 
 async function guardarCliente() {
     const id = document.getElementById('clienteId').value;

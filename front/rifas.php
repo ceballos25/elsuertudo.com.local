@@ -149,6 +149,6 @@ include_once ROOT_PATH . "/includes/head.php";
 </div>
 
 <?php 
-$extra_js = '<script src="' . ASSETS_URL . '/js/rifas.js?v=25"></script>';
+$extra_js = '<script src="' . ASSETS_URL . '/js/rifas.js?v=26"></script>';
 include_once ROOT_PATH . "/includes/footer.php"; 
 ?>
