@@ -37,7 +37,7 @@ class Raffle extends Model
     public function listTitles(): array
     {
         return $this->db->fetchAll(
-            "SELECT id_raffle, title_raffle FROM raffles ORDER BY id_raffle DESC"
+            "SELECT id_raffle, title_raffle FROM raffles WHERE status_raffle = 1 ORDER BY id_raffle DESC"
         );
     }
 }
