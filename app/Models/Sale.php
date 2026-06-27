@@ -52,25 +52,9 @@ class Sale extends Model
         ";
 
         if (!empty($filters['search'])) {
-            $search = trim((string) $filters['search']);
-            $phoneDigits = preg_replace('/\D/', '', $search);
-
-            $from .= " AND (
-                c.name_customer LIKE ?
-                OR c.phone_customer LIKE ?
-                OR s.code_sale LIKE ?
-                OR CAST(s.id_sale AS CHAR) LIKE ?
-                OR EXISTS (
-                    SELECT 1 FROM tickets t
-                    WHERE t.id_sale_ticket = s.id_sale
-                      AND t.number_ticket LIKE ?
-                )
-            )";
-            $params[] = "%{$search}%";
-            $params[] = '%' . ($phoneDigits !== '' ? $phoneDigits : $search) . '%';
-            $params[] = "%{$search}%";
-            $params[] = "%{$search}%";
-            $params[] = "%{$search}%";
+            $searchPart = \App\Support\SaleSearchHelper::forSalesQuery((string) $filters['search']);
+            $from .= $searchPart['sql'];
+            $params = array_merge($params, $searchPart['params']);
         }
 
         if (!empty($filters['id_raffle'])) {

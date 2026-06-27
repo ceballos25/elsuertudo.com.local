@@ -196,19 +196,9 @@ class Ticket extends Model
         }
 
         if ($search !== '') {
-            $phone = preg_replace('/\D/', '', $search);
-            $sql .= " AND (
-                t.number_ticket LIKE ?
-                OR c.name_customer LIKE ?
-                OR c.phone_customer LIKE ?
-                OR s.code_sale LIKE ?
-                OR CAST(s.id_sale AS CHAR) LIKE ?
-            )";
-            $params[] = "%{$search}%";
-            $params[] = "%{$search}%";
-            $params[] = '%' . ($phone !== '' ? $phone : $search) . '%';
-            $params[] = "%{$search}%";
-            $params[] = "%{$search}%";
+            $searchPart = \App\Support\SaleSearchHelper::forSoldTicketsQuery($search);
+            $sql .= $searchPart['sql'];
+            $params = array_merge($params, $searchPart['params']);
         }
 
         $sql .= " ORDER BY s.id_sale DESC, t.number_ticket ASC LIMIT 10000";

@@ -22,7 +22,7 @@ include_once ROOT_PATH . "/includes/head.php";
                                     <input type="search"
                                            id="searchVentas"
                                            class="form-control form-control-sm"
-                                           placeholder="Nombre, celular, número o código"
+                                           placeholder="Nombre, celular, código o número exacto (ej. 00, 33)"
                                            autocomplete="off"
                                            enterkeyhint="search">
                                 </div>
