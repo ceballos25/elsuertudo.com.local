@@ -56,9 +56,7 @@ async function cargarRifas() {
         if (j.success && sel) {
             sel.innerHTML = '<option value="">🌐 Todas las rifas activas</option>';
             j.data.forEach(x => sel.innerHTML += `<option value="${x.id_raffle}">${x.title_raffle}</option>`);
-            if (j.data.length > 0) {
-                sel.value = String(j.data[0].id_raffle);
-            }
+            sel.value = '';
         }
     } catch (e) { console.error(e); }
 }
@@ -90,11 +88,7 @@ async function cargarDashboard() {
 }
 
 function limpiarFiltrosDashboard() {
-    const sel = document.getElementById('filterRifa');
-    if (sel) {
-        const primeraActiva = [...sel.options].find(o => o.value);
-        sel.value = primeraActiva ? primeraActiva.value : '';
-    }
+    document.getElementById('filterRifa').value = '';
     document.getElementById('filterPeriodo').value = 'mes';
     cambiarPeriodo();
 }
