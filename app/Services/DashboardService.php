@@ -24,6 +24,7 @@ class DashboardService
         $fechaDesde = $filters['fechaDesde'] ?? date('Y-m-01');
         $fechaHasta = $filters['fechaHasta'] ?? date('Y-m-d');
         $idRaffle = !empty($filters['id_raffle']) ? (int) $filters['id_raffle'] : null;
+        $onlyActiveRaffles = $idRaffle === null;
 
         $response = [
             'kpis' => [
@@ -48,7 +49,7 @@ class DashboardService
             'ultimasVentas' => [],
         ];
 
-        $ventas = $this->saleModel->getDashboardSales($fechaDesde, $fechaHasta, $idRaffle);
+        $ventas = $this->saleModel->getDashboardSales($fechaDesde, $fechaHasta, $idRaffle, $onlyActiveRaffles);
 
         $tendenciaMap = [];
         $mediosTransaccionesMap = [];
@@ -100,9 +101,9 @@ class DashboardService
 
         $response['ultimasVentas'] = array_slice($ventas, 0, 10);
         $response['kpis']['totalTransacciones'] = count($ventas);
-        $response['kpis']['numerosVendidos']    = $this->ticketModel->countByStatus(1, $idRaffle);
-        $response['kpis']['numerosReservados']  = $this->ticketModel->countByStatus(2, $idRaffle);
-        $response['kpis']['numerosDisponibles'] = $this->ticketModel->countByStatus(0, $idRaffle);
+        $response['kpis']['numerosVendidos']    = $this->ticketModel->countByStatus(1, $idRaffle, $onlyActiveRaffles);
+        $response['kpis']['numerosReservados']  = $this->ticketModel->countByStatus(2, $idRaffle, $onlyActiveRaffles);
+        $response['kpis']['numerosDisponibles'] = $this->ticketModel->countByStatus(0, $idRaffle, $onlyActiveRaffles);
         $response['kpis']['totalNumeros']       = $response['kpis']['numerosVendidos']
             + $response['kpis']['numerosReservados']
             + $response['kpis']['numerosDisponibles'];

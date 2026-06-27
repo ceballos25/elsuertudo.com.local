@@ -39,8 +39,17 @@ class Ticket extends Model
         return $this->countByStatus(0, $idRaffle);
     }
 
-    public function countByStatus(int $status, ?int $idRaffle = null): int
+    public function countByStatus(int $status, ?int $idRaffle = null, bool $onlyActiveRaffles = false): int
     {
+        if ($onlyActiveRaffles && !$idRaffle) {
+            return (int) $this->db->fetchColumn(
+                "SELECT COUNT(*) FROM tickets t
+                 INNER JOIN raffles r ON r.id_raffle = t.id_raffle_ticket
+                 WHERE t.status_ticket = ? AND r.status_raffle = 1",
+                [$status]
+            );
+        }
+
         $sql = "SELECT COUNT(*) FROM tickets WHERE status_ticket = ?";
         $params = [$status];
 

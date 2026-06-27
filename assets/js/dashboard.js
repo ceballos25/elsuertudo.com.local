@@ -9,8 +9,8 @@ let chartTopCliInst = null;
 let chartHeatmapInst = null; // Nuevo
 let chartPaquetesInst = null; // Nuevo
 
-document.addEventListener('DOMContentLoaded', () => {
-    cargarRifas();
+document.addEventListener('DOMContentLoaded', async () => {
+    await cargarRifas();
     cambiarPeriodo();
 
     document.getElementById('filterPeriodo')?.addEventListener('change', cambiarPeriodo);
@@ -54,8 +54,11 @@ async function cargarRifas() {
         const j = await API.post('rifas', { action: 'obtener_rifas' });
         const sel = document.getElementById('filterRifa');
         if (j.success && sel) {
-            sel.innerHTML = '<option value="">🌐 Todas las Rifas</option>';
+            sel.innerHTML = '<option value="">🌐 Todas las rifas activas</option>';
             j.data.forEach(x => sel.innerHTML += `<option value="${x.id_raffle}">${x.title_raffle}</option>`);
+            if (j.data.length > 0) {
+                sel.value = String(j.data[0].id_raffle);
+            }
         }
     } catch (e) { console.error(e); }
 }
@@ -87,7 +90,11 @@ async function cargarDashboard() {
 }
 
 function limpiarFiltrosDashboard() {
-    document.getElementById('filterRifa').value = '';
+    const sel = document.getElementById('filterRifa');
+    if (sel) {
+        const primeraActiva = [...sel.options].find(o => o.value);
+        sel.value = primeraActiva ? primeraActiva.value : '';
+    }
     document.getElementById('filterPeriodo').value = 'mes';
     cambiarPeriodo();
 }
@@ -97,7 +104,7 @@ function updateFilterResumen() {
     if (!el) return;
 
     const rifaSel = document.getElementById('filterRifa');
-    const rifaText = rifaSel?.options[rifaSel.selectedIndex]?.text?.replace(/^🌐\s*/, '') || 'Todas las rifas';
+    const rifaText = rifaSel?.options[rifaSel.selectedIndex]?.text?.replace(/^🌐\s*/, '') || 'Todas las rifas activas';
     const desde = document.getElementById('filterDesde')?.value || '';
     const hasta = document.getElementById('filterHasta')?.value || '';
 

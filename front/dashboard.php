@@ -258,6 +258,6 @@ include_once ROOT_PATH . "/includes/head.php";
 
 <?php
 $extra_js = '<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>'
-    . '<script src="' . ASSETS_URL . '/js/dashboard.js?v=7"></script>';
+    . '<script src="' . ASSETS_URL . '/js/dashboard.js?v=8"></script>';
 include_once ROOT_PATH . "/includes/footer.php";
 ?>

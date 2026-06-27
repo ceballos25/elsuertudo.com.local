@@ -114,7 +114,7 @@ class Sale extends Model
         ", [$code]);
     }
 
-    public function getDashboardSales(string $from, string $to, ?int $idRaffle = null): array
+    public function getDashboardSales(string $from, string $to, ?int $idRaffle = null, bool $onlyActiveRaffles = false): array
     {
         $sql = "
             SELECT s.id_sale, s.total_sale, s.quantity_sale, s.date_created_sale,
@@ -131,6 +131,8 @@ class Sale extends Model
         if ($idRaffle) {
             $sql .= " AND s.id_raffle_sale = ?";
             $params[] = $idRaffle;
+        } elseif ($onlyActiveRaffles) {
+            $sql .= " AND r.status_raffle = 1";
         }
 
         $sql .= " ORDER BY s.id_sale DESC LIMIT 10000";
